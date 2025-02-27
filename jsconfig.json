@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["./*"],
+            "@components/*": ["app/(client)/(main)/components/*"],
+            "@context/*": ["app/(client)/(main)/context/*"],
+            "@modals/*": ["app/(client)/(main)/components/modals/*"],
+            "@styles/*": ["app/(client)/styles/*"]
+        }
+    }
+}
