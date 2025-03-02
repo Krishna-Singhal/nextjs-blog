@@ -1,5 +1,5 @@
 "use client";
-import { generateMagicLink } from "@/actions/generateMagicLink";
+import { generateMagicLink } from "@/app/server/generateMagicLink";
 import { Dialog, DialogBody, DialogHeader } from "@material-tailwind/react";
 import Link from "next/link";
 import { toast } from "react-hot-toast";

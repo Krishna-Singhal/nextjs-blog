@@ -16,7 +16,7 @@ export const ModalProvider = ({ children }) => {
             setModal(modalType);
         }
         setShouldClose(shouldClose);
-        setOpen((prev) => !prev);
+        setOpen((prev) => (modalType != null ? true : !prev));
     };
 
     return (

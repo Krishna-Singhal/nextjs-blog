@@ -5,17 +5,19 @@ import LinkExpired from "../components/modals/LinkExpired";
 import AuthError from "../components/modals/AuthError";
 import Loading from "../components/loading";
 import { Suspense, useEffect, useState } from "react";
+import { useUser } from "@/app/(client)/context/UserContext";
 
 const SigninHandler = ({ token }) => {
     const router = useRouter();
     const [status, setStatus] = useState("loading");
+    const { setUser } = useUser();
 
     useEffect(() => {
         let isMounted = true;
 
         const signIn = async () => {
             try {
-                const res = await fetch(`/api/auth/sign-in`, {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/sign-in`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ token }),
@@ -24,6 +26,8 @@ const SigninHandler = ({ token }) => {
                 if (!isMounted) return;
 
                 if (res.ok) {
+                    const data = await res.json();
+                    setUser(data.user);
                     router.push("/");
                 } else if (res.status === 403) {
                     setStatus("expired");

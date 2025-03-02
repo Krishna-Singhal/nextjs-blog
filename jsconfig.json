@@ -3,9 +3,9 @@
         "baseUrl": ".",
         "paths": {
             "@/*": ["./*"],
-            "@components/*": ["app/(client)/(main)/components/*"],
-            "@context/*": ["app/(client)/(main)/context/*"],
-            "@modals/*": ["app/(client)/(main)/components/modals/*"],
+            "@components/*": ["app/(client)/components/*"],
+            "@context/*": ["app/(client)/context/*"],
+            "@modals/*": ["app/(client)/components/modals/*"],
             "@styles/*": ["app/(client)/styles/*"]
         }
     }

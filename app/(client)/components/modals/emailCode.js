@@ -3,11 +3,13 @@
 import { useModal } from "@context/ModalContext";
 import { DialogHeader, DialogBody } from "@material-tailwind/react";
 import { useState } from "react";
+import { useUser } from "@context/UserContext";
 
 const EmailCode = () => {
     const { toggleModal, email, emailModal } = useModal();
     const [code, setCode] = useState("");
     const [error, setError] = useState(false);
+    const { setUser } = useUser();
 
     const handleChange = (e) => {
         const value = e.target.value;
@@ -23,7 +25,7 @@ const EmailCode = () => {
     const handleCodeSubmit = async () => {
         if (error) return;
         try {
-            const res = await fetch("/api/auth/sign-in", {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/sign-in`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, code }),
@@ -32,8 +34,9 @@ const EmailCode = () => {
             const data = await res.json();
 
             if (res.ok) {
+                setUser(data.user);
                 console.log("Sign-in successful:", data);
-                toggleModal();
+                toggleModal({});
             } else {
                 console.log("Sign-in failed:", data.message);
             }

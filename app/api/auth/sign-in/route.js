@@ -4,7 +4,7 @@ import MagicLink from "@/models/MagicLink";
 import { applyMiddlewares } from "@/utils/applyMiddlewares";
 import { withDB } from "@/middleware/withDB";
 import { response } from "@/utils/response";
-import { setCookie } from "@/actions/cookies";
+import { setCookie } from "@/app/server/cookies";
 
 async function handler(req) {
     try {

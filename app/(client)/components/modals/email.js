@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { generateMagicLink } from "@/actions/generateMagicLink";
+import { generateMagicLink } from "@/app/server/generateMagicLink";
 import { useModal } from "@context/ModalContext";
 import { DialogHeader, DialogBody } from "@material-tailwind/react";
 import { toast, Toaster } from "react-hot-toast";

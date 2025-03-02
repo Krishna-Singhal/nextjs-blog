@@ -5,7 +5,7 @@ import { applyMiddlewares } from "@/utils/applyMiddlewares";
 import { withDB } from "@/middleware/withDB";
 import { response } from "@/utils/response";
 import MagicLink from "@/models/MagicLink";
-import { setCookie } from "@/actions/cookies";
+import { setCookie } from "@/app/server/cookies";
 
 export const generateUsername = async (email) => {
     let username = email.split("@")[0];
@@ -46,15 +46,15 @@ async function handler(req) {
         const magicLink = await MagicLink.findOne({ token });
 
         if (!magicLink) {
-            response(403, "Invalid token provided. Try signing up again.");
+            return response(403, "Invalid token provided. Try signing up again.");
         }
 
         if (magicLink.account_created) {
-            response(403, "Token has been expired. Try signing up again.");
+            return response(403, "Token has been expired. Try signing up again.");
         }
 
         if (new Date() > new Date(magicLink.expiresAt)) {
-            response(403, "Token has been expired. Try signing up again.");
+            return response(403, "Token has been expired. Try signing up again.");
         }
 
         const username = await generateUsername(email);

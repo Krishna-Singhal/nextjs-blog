@@ -1,4 +1,3 @@
-import "@styles/globals.css";
 import Modals from "@components/modal";
 import { ModalProvider } from "@context/ModalContext";
 
@@ -9,13 +8,9 @@ export const metadata = {
 
 export default function Layout({ children }) {
     return (
-        <html lang="en">
-            <body>
-                <ModalProvider>
-                    {children}
-                    <Modals />
-                </ModalProvider>
-            </body>
-        </html>
+        <ModalProvider>
+            {children}
+            <Modals />
+        </ModalProvider>
     );
 }

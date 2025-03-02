@@ -7,6 +7,10 @@ const AuthModal = () => {
     const { modal, setModal, setEmailModal } = useModal();
     const modalType = modal == "signin" ? "Sign in" : "Sign up";
 
+    const handleGoogleAuth = () => {
+        window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}/b/callback/google_auth&response_type=token&scope=openid%20email%20profile`;
+    };
+
     return (
         <div className="flex flex-col items-center justify-center">
             <DialogHeader className="font-gt-super text-3xl font-normal text-black">
@@ -14,7 +18,10 @@ const AuthModal = () => {
             </DialogHeader>
             <DialogBody className="mt-16">
                 <div className="flex justify-center">
-                    <button className="flex justify-between items-center rounded-full border md:w-[300px] w-[280px] border-black px-3 py-2 text-xl text-black">
+                    <button
+                        onClick={handleGoogleAuth}
+                        className="flex justify-between items-center rounded-full border md:w-[300px] w-[280px] border-black px-3 py-2 text-xl text-black"
+                    >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"

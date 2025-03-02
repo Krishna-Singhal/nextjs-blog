@@ -2,14 +2,16 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useUser } from "@/app/(client)/context/UserContext";
 
 const Register = ({ email, token }) => {
     const [fullname, setFullname] = useState(() => (email ? email.split("@")[0] : ""));
     const router = useRouter();
+    const { setUser } = useUser();
 
     const handleSubmit = async () => {
         try {
-            const res = await fetch("/api/auth/sign-up", {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/sign-up`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -23,6 +25,7 @@ const Register = ({ email, token }) => {
             const data = await res.json();
             if (res.ok) {
                 toast.success("Account created successfully!");
+                setUser(data.user);
                 setTimeout(() => {
                     router.push("/");
                 }, 1500);

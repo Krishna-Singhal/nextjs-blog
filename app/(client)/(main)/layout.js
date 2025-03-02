@@ -1,4 +1,3 @@
-import "@styles/globals.css";
 import Navbar from "@components/navbar";
 import Modals from "@components/modal";
 import { Toaster } from "react-hot-toast";
@@ -11,15 +10,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
     return (
-        <html lang="en">
-            <body>
-                <ModalProvider>
-                    <Navbar />
-                    <Toaster />
-                    {children}
-                    <Modals />
-                </ModalProvider>
-            </body>
-        </html>
+        <ModalProvider>
+            <Navbar />
+            <Toaster />
+            {children}
+            <Modals />
+        </ModalProvider>
     );
 }

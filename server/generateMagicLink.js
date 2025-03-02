@@ -1,6 +1,6 @@
 "use server";
 import crypto from "crypto";
-import MagicLink from "../models/MagicLink.js";
+import MagicLink from "../../models/MagicLink.js";
 import { connectToDB } from "lib/mongodb.js";
 import User from "@/models/User.js";
 // import sendEmail from "@/utils/sendEmail";
@@ -28,7 +28,7 @@ export async function generateMagicLink(email, mode) {
     const magicLink = new MagicLink({ email, token, code, expiresAt });
     await magicLink.save();
 
-    const link = `${process.env.HOSTNAME}/b/callback/email?token=${token}&mode=${mode}`;
+    const link = `${process.env.NEXT_PUBLIC_APP_URL}/b/callback/email?token=${token}&mode=${mode}`;
 
     // await sendEmail(email, "Your Magic Login Link", `Click here to login: ${link}`);
     console.log(`Magic Link: ${link}`);

@@ -1,7 +1,7 @@
 "use client";
 import { Dialog, DialogBody, DialogHeader } from "@material-tailwind/react";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const AuthError = ({ mode }) => {
     const [modalElement, setModalElement] = useState(null);
