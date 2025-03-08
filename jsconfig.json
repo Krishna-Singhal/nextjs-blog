@@ -4,6 +4,7 @@
         "paths": {
             "@/*": ["./*"],
             "@components/*": ["app/(client)/components/*"],
+            "@common/*": ["app/(client)/common/*"],
             "@context/*": ["app/(client)/context/*"],
             "@modals/*": ["app/(client)/components/modals/*"],
             "@styles/*": ["app/(client)/styles/*"]

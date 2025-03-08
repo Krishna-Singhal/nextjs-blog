@@ -1,4 +1,3 @@
-import Navbar from "@components/navbar";
 import Modals from "@components/modal";
 import { Toaster } from "react-hot-toast";
 import { ModalProvider } from "@context/ModalContext";
@@ -11,7 +10,6 @@ export const metadata = {
 export default function RootLayout({ children }) {
     return (
         <ModalProvider>
-            <Navbar />
             <Toaster />
             {children}
             <Modals />

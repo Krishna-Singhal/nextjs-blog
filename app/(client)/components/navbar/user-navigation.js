@@ -1,5 +1,5 @@
 "use client";
-import AnimationWrapper from "@components/page-animation";
+import AnimationWrapper from "@common/page-animation";
 import Link from "next/link";
 import { useUser } from "@context/UserContext";
 import { removeCookie } from "@/app/server/cookies";

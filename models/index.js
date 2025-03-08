@@ -1,7 +1,5 @@
 import "./Activity";
 import "./Blog";
-import "./Category";
-import "./Subcategory";
 import "./Comment";
 import "./Like";
 import "./Notification";

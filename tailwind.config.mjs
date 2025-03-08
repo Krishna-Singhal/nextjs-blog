@@ -1,4 +1,4 @@
-const withMT = require("@material-tailwind/react/utils/withMT");
+import withMT from "@material-tailwind/react/utils/withMT";
 
 const config = withMT({
     content: ["./app/**/*.{js,ts,jsx,tsx,mdx}"],
@@ -25,7 +25,7 @@ const config = withMT({
         extend: {
             fontFamily: {
                 "gt-super": ["GT Super", "Georgia", "Cambria", "Times New Roman", "Times", "serif"],
-                monospace: ["monospace"],
+                mono: ["monospace"],
                 inter: ["'Inter'", "sans-serif"],
                 gelasio: ["'Gelasio'", "serif"],
             },

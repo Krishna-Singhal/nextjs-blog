@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useUser } from "@context/UserContext";
-import UserNavigation from "@components/user-navigation";
+import UserNavigation from "@components/navbar/user-navigation";
 
 const Navbar = () => {
     const [searchBoxVisibility, setsearchBoxVisibility] = useState(false);
@@ -66,11 +66,23 @@ const Navbar = () => {
                             onBlur={handleUserNavToggle}
                         >
                             <button className="w-10 h-10 mt-1">
-                                <img
-                                    src={user.profile_img}
-                                    className="w-full h-full object-cover rounded-full"
-                                    alt={user.fullname}
-                                />
+                                {user.profile_img.includes("api.dicebear.com") ? (
+                                    <img
+                                        src={user.profile_img}
+                                        alt={user.fullname}
+                                        className="w-full h-full object-cover rounded-full"
+                                    />
+                                ) : (
+                                    <Image
+                                        src={user.profile_img}
+                                        width={0}
+                                        height={0}
+                                        sizes="100vw"
+                                        className="w-full h-full object-cover rounded-full"
+                                        alt={user.fullname}
+                                        // referrerPolicy="no-referrer"
+                                    />
+                                )}
                             </button>
                             {userNavPanel && <UserNavigation />}
                         </div>

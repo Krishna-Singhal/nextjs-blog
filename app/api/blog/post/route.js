@@ -5,7 +5,8 @@ import Blog from "@/models/Blog";
 import User from "@/models/User";
 import { customAlphabet } from "nanoid";
 import { withDB } from "@/middleware/withDB";
-import mongoose from "mongoose";
+import Tag from "@/models/Tag";
+import slugify from "slugify";
 
 const nanoid = customAlphabet("0123456789", 6);
 
@@ -36,18 +37,23 @@ async function handler(req) {
             }
         }
 
-        const formattedTags = tags
-            .filter((tag) => mongoose.isValidObjectId(tag))
-            .map((tag) => new mongoose.Types.ObjectId(tag));
-        const slug =
-            blogslug ||
-            title
-                .replace(/[^a-zA-Z0-9]/g, " ")
-                .replace(/\s+/g, "-")
-                .trim()
-                .toLowerCase() +
-                "-" +
-                nanoid();
+        const tagsObj = await Tag.find({
+            name: { $in: tags.map((name) => name.trim().toLowerCase()) },
+        });
+        const tagNames = tagsObj.map((tag) => tag.name.trim().toLowerCase());
+
+        const newTagNames = tags
+            .map((name) => name.trim().toLowerCase())
+            .filter((name) => !tagNames.includes(name));
+
+        const newTags =
+            newTagNames.length > 0
+                ? await Tag.insertMany(newTagNames.map((name) => ({ name, slug: slugify(name) })))
+                : [];
+
+        const formattedTags = [...tagsObj, ...newTags].map((tag) => tag._id);
+
+        const slug = blogslug || slugify(title) + "-" + nanoid();
 
         if (blogslug) {
             const blog = await Blog.findOneAndUpdate(

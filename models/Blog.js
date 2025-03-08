@@ -26,14 +26,6 @@ const blogSchema = mongoose.Schema(
             required: true,
             ref: "User",
         },
-        categories: {
-            type: Schema.Types.ObjectId,
-            ref: "Category",
-        },
-        subcategories: {
-            type: Schema.Types.ObjectId,
-            ref: "Subcategory",
-        },
         tags: {
             type: [Schema.Types.ObjectId],
             ref: "Tag",

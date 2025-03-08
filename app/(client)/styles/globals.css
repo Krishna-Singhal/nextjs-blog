@@ -54,7 +54,7 @@
     }
 
     .btn-dark {
-        @apply whitespace-nowrap bg-black text-white rounded-full py-3 px-6 text-xl hover:bg-opacity-80;
+        @apply whitespace-nowrap bg-black text-white rounded-full py-2 px-4 text-xl hover:bg-opacity-80;
     }
 
     .btn-light {

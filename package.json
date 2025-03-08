@@ -7,7 +7,9 @@
         "dev": "next dev --turbopack",
         "build": "next build",
         "start": "next start",
-        "lint": "next lint"
+        "lint": "next lint",
+        "lint:fix": "next lint --fix",
+        "format": "prettier --write --ignore-path .gitignore \"./**/*.{js,jsx,ts,tsx,json,css}\""
     },
     "browserslist": [
         ">0.2%",
@@ -15,6 +17,8 @@
         "not op_mini all"
     ],
     "dependencies": {
+        "@aws-sdk/client-s3": "^3.758.0",
+        "@aws-sdk/s3-request-presigner": "^3.758.0",
         "@editorjs/code": "^2.8.0",
         "@editorjs/editorjs": "^2.27.2",
         "@editorjs/embed": "^2.5.3",
@@ -29,12 +33,9 @@
         "@material-tailwind/react": "^2.1.10",
         "@tailwindcss/postcss": "^4.0.8",
         "autoprefixer": "^10.4.20",
-        "aws-sdk": "^2.1692.0",
-        "bcrypt": "^5.1.1",
+        "clsx": "^2.1.1",
         "cookies-next": "^5.1.0",
         "dotenv": "^16.4.7",
-        "firebase": "^10.1.0",
-        "firebase-admin": "^13.1.0",
         "framer-motion": "^12.4.7",
         "js-cookie": "^3.0.5",
         "jsonwebtoken": "^9.0.2",
@@ -43,7 +44,8 @@
         "next": "15.1.7",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
-        "react-hot-toast": "^2.4.1"
+        "react-hot-toast": "^2.5.1",
+        "slugify": "^1.6.6"
     },
     "devDependencies": {
         "@eslint/eslintrc": "^3",

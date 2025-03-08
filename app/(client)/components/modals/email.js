@@ -53,7 +53,7 @@ const EmailModal = () => {
                         type="email"
                         value={inputEmail}
                         onChange={(e) => setInputEmail(e.target.value)}
-                        className="bg-[#f2f2f2] w-[270px] focus:outline outline-black p-2 focus:bg-[#f9f9f9] text-center text-black rounded font-monospace"
+                        className="bg-[#f2f2f2] w-[270px] focus:outline outline-black p-2 focus:bg-[#f9f9f9] text-center text-black rounded font-mono"
                     />
 
                     <button
