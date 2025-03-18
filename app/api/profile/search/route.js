@@ -5,24 +5,26 @@ import { response } from "@/utils/response";
 
 async function handler(req) {
     try {
-        const { query } = await req.json();
+        const query = req.nextUrl.searchParams.get("query");
+        const page = req.nextUrl.searchParams.get("page") || 1;
         if (!query) {
             return response(400, "Search query is required");
         }
 
-        const users = await User.find({
+        const maxLimit = process.env.MAX_LIMIT;
+
+        const profiles = await User.find({
             "personal_info.fullname": new RegExp(query, "i"),
         })
-            .limit(50)
-            .select(
-                "personal_info.fullname personal_info.username personal_info.profile_img -_id"
-            );
+            .limit(maxLimit)
+            .skip(Math.max(0, page - 1) * maxLimit)
+            .select("personal_info.fullname personal_info.username personal_info.profile_img -_id");
 
-        return response(200, { users });
+        return response(200, "success", { profiles });
     } catch (error) {
         console.error(error);
         return response(500, "Internal server error", { error: error.message });
     }
 }
 
-export const POST = applyMiddlewares(withDB)(handler);
+export const GET = applyMiddlewares(withDB)(handler);

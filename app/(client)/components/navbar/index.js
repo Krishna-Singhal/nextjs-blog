@@ -6,16 +6,25 @@ import Link from "next/link";
 import { useState } from "react";
 import { useUser } from "@context/UserContext";
 import UserNavigation from "@components/navbar/user-navigation";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
     const [searchBoxVisibility, setsearchBoxVisibility] = useState(false);
     const [userNavPanel, setuserNavPanel] = useState(false);
+    const router = useRouter();
 
     const { toggleModal } = useModal();
     const { user } = useUser();
 
     const handleUserNavToggle = () => {
         setuserNavPanel((p) => !p);
+    };
+
+    const handleSearch = (e) => {
+        let query = e.target.value;
+        if (e.keyCode === 13 && query.length) {
+            router.push(`/search/${query}`);
+        }
     };
 
     return (
@@ -32,6 +41,7 @@ const Navbar = () => {
                 <input
                     type="text"
                     placeholder="Search"
+                    onKeyDown={handleSearch}
                     className="w-full md:w-auto bg-grey p-3 pl-6 pr-[12%] md:pr-6 rounded-full placeholder:text-dark-grey md:pl-12"
                 />
                 <i className="fi fi-rr-search absolute right-[10%] md:pointer-events-none md:left-5 top-1/2 -translate-y-1/2 text-xl text-dark-grey"></i>
@@ -80,7 +90,7 @@ const Navbar = () => {
                                         sizes="100vw"
                                         className="w-full h-full object-cover rounded-full"
                                         alt={user.fullname}
-                                        // referrerPolicy="no-referrer"
+                                        referrerPolicy="no-referrer"
                                     />
                                 )}
                             </button>

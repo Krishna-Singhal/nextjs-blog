@@ -5,7 +5,11 @@ import Blog from "@/models/Blog";
 
 async function handler(req) {
     try {
-        const { tag, page = 1, query, author, eliminate_blog } = await req.json();
+        const tag = req.nextUrl.searchParams.get("tag");
+        const page = req.nextUrl.searchParams.get("page") || 1;
+        const query = req.nextUrl.searchParams.get("query");
+        const author = req.nextUrl.searchParams.get("author");
+        const eliminate_blog = req.nextUrl.searchParams.get("eliminate_blog");
         const maxLimit = process.env.MAX_LIMIT;
 
         let findquery = { draft: false };
@@ -26,7 +30,7 @@ async function handler(req) {
             )
             .populate("tags", "-_id")
             .sort({ publishedAt: -1 })
-            .select("slug title des banner activity tags publishedAt -_id")
+            .select("slug title des banner author activity tags publishedAt -_id")
             .skip(Math.max(0, page - 1) * maxLimit)
             .limit(maxLimit);
 
@@ -37,4 +41,4 @@ async function handler(req) {
     }
 }
 
-export const POST = applyMiddlewares(withDB)(handler);
+export const GET = applyMiddlewares(withDB)(handler);

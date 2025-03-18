@@ -25,11 +25,6 @@ export default function GoogleAuthCallback() {
 
     const verifyTokenWithBackend = async (token) => {
         try {
-            // const response = await fetch(
-            //     `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${token}`
-            // );
-            // const user = await response.json();
-
             const res = await fetch("/api/auth/google-auth", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

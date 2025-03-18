@@ -1,4 +1,3 @@
-import Modals from "@components/modal";
 import { ModalProvider } from "@context/ModalContext";
 
 export const metadata = {
@@ -7,10 +6,5 @@ export const metadata = {
 };
 
 export default function Layout({ children }) {
-    return (
-        <ModalProvider>
-            {children}
-            <Modals />
-        </ModalProvider>
-    );
+    return <ModalProvider>{children}</ModalProvider>;
 }

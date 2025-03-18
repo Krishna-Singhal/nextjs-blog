@@ -12,7 +12,7 @@ export const UserProvider = ({ children, initialUser }) => {
         if (!initialUser) {
             const fetchUser = async () => {
                 const userData = await getCookies("user");
-                setUser(userData);
+                setUser(userData || {});
                 setLoading(false);
             };
 

@@ -6,6 +6,7 @@
             "@components/*": ["app/(client)/components/*"],
             "@common/*": ["app/(client)/common/*"],
             "@context/*": ["app/(client)/context/*"],
+            "@hooks/*": ["app/(client)/hooks/*"],
             "@modals/*": ["app/(client)/components/modals/*"],
             "@styles/*": ["app/(client)/styles/*"]
         }

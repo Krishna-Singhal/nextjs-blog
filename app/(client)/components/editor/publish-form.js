@@ -157,24 +157,25 @@ const PublishForm = () => {
                     <p className="text-dark-grey mb-2 mt-9">
                         Topics - (Helps us search and rank your blog post.)
                     </p>
-                    <SuggestionInput
-                        placeholder="Add topics..."
-                        fetchSuggestions={fetchTags}
-                        onSelect={handleAddTagEvent}
-                        allowCustomInput={true}
-                        containerProps={{ className: "input-box pl-2 py-2 pb-4" }}
-                        InputProps={{
-                            className:
-                                "sticky bg-white top-0 left-0 p-2 pl-4 mb-2 mt-1 focus:bg-white",
-                        }}
-                        debounceTimeout={400}
-                    >
+                    <div className="input-box pl-2 py-2 pb-4">
+                        <SuggestionInput
+                            placeholder="Add topics..."
+                            fetchSuggestions={fetchTags}
+                            onSelect={handleAddTagEvent}
+                            allowCustomInput={true}
+                            containerProps={{ className: "" }}
+                            InputProps={{
+                                className:
+                                    "sticky bg-white top-0 left-0 p-2 pl-4 mb-2 mt-1 focus:bg-white",
+                            }}
+                            debounceTimeout={400}
+                        />
                         <div>
                             {tags.map((tag, i) => (
                                 <Topic key={i} topicIndex={i} topic={tag} />
                             ))}
                         </div>
-                    </SuggestionInput>
+                    </div>
                     <p className="mt-1 mb-4 text-dark-grey text-sm text-right">
                         {tagsLimit - tags.length} Tags left
                     </p>

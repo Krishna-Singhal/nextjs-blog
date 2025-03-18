@@ -107,6 +107,7 @@ export default function SuggestionInput({
                 placeholder={placeholder}
                 value={query}
                 onChange={handleChange}
+                onBlur={() => closeSuggestions(false)}
                 onKeyDown={handleKeyDown}
                 {...InputProps}
                 className={clsx("input-box p-4", InputProps.className)}
@@ -117,7 +118,7 @@ export default function SuggestionInput({
                     ref={dropdownRef}
                     {...DropdownProps}
                     className={clsx(
-                        "absolute bg-white border w-full mt-1 rounded-md shadow-md max-h-40 overflow-y-auto p-2",
+                        "absolute bg-white w-full border border-grey duration-200 mt-1 rounded-md shadow-md max-h-40 overflow-y-auto p-2",
                         dropdownAbove ? "mb-1 bottom-full" : "mt-1",
                         DropdownProps.className
                     )}
