@@ -3,6 +3,7 @@
 import Image from "next/image";
 import React from "react";
 import { formatCount, timeAgo } from "@common/functions";
+import ProfileImage from "@components/ui/ProfileImage";
 
 const BlogCard = ({ skeleton, blog }) => {
     if (skeleton) {
@@ -35,15 +36,7 @@ const BlogCard = ({ skeleton, blog }) => {
                 <div className="w-full">
                     <div className="flex gap-2 items-center mb-4">
                         <div className="w-5 h-5 sm:w-6 sm:h-6">
-                            <Image
-                                src={profile_img}
-                                width={0}
-                                height={0}
-                                sizes="100vw"
-                                className="w-full h-full object-cover rounded-full"
-                                alt={fullname}
-                                referrerPolicy="no-referrer"
-                            />
+                            <ProfileImage profile_img={profile_img} fullname={fullname} />
                         </div>
                         <p className="line-clamp-1 !text-[13px] sm:!text-base">{fullname}</p>
                     </div>

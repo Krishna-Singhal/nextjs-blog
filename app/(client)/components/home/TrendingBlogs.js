@@ -6,7 +6,8 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { timeAgo } from "@common/functions";
 import AnimationWrapper from "@common/page-animation";
-import NoDataMessage from "../ui/no-data";
+import NoDataMessage from "@components/ui/no-data";
+import ProfileImage from "@components/ui/ProfileImage";
 
 const TrendingBlogCard = ({ blog, index }) => {
     let {
@@ -25,15 +26,7 @@ const TrendingBlogCard = ({ blog, index }) => {
             <div>
                 <div className="flex gap-2 items-center mb-2">
                     <div className="max-w-min max-h-min min-w-5 min-h-5 sm:min-w-6 sm:min-h-6">
-                        <Image
-                            src={profile_img}
-                            width={0}
-                            height={0}
-                            sizes="100vw"
-                            className="w-full h-full object-cover rounded-full"
-                            alt={fullname}
-                            referrerPolicy="no-referrer"
-                        />
+                        <ProfileImage profile_img={profile_img} fullname={fullname} />
                     </div>
                     <p className="line-clamp-1">{fullname}</p>
                 </div>

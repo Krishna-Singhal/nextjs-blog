@@ -5,24 +5,25 @@ import { response } from "@/utils/response";
 
 async function handler(req) {
     try {
-        const { username } = await req.json();
+        const username = req.nextUrl.searchParams.get("username");
+
         if (!username) {
             return response(400, "Username is required");
         }
 
-        const user = await User.findOne({
+        const profile = await User.findOne({
             "personal_info.username": username,
         }).select("-personal_info.password -google_auth -updatedAt");
 
-        if (!user) {
+        if (!profile) {
             return response(404, "User not found");
         }
 
-        return response(200, { user });
+        return response(200, "success", { profile });
     } catch (error) {
         console.error(error);
         return response(500, "Internal server error", { error: error.message });
     }
 }
 
-export const POST = applyMiddlewares(withDB)(handler);
+export const GET = applyMiddlewares(withDB)(handler);

@@ -189,8 +189,6 @@ export const ProfileSearchResults = ({ query, initialProfiles }) => {
         staleTime: 1000 * 60 * 5,
     });
 
-    console.log(profiles);
-
     return (
         <>
             <h1 className="font-medium text-xl mb-8">

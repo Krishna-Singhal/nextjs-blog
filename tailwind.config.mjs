@@ -3,6 +3,9 @@ import withMT from "@material-tailwind/react/utils/withMT";
 const config = withMT({
     content: ["./app/**/*.{js,ts,jsx,tsx,mdx}"],
     theme: {
+        screens: {
+            "[1100]": "1100px",
+        },
         colors: {
             white: "#FFFFFF",
             black: "#242424",

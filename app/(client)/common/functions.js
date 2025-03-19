@@ -28,3 +28,12 @@ export function formatCount(number) {
     if (number < 1_000_000_000) return (number / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
     return (number / 1_000_000_000).toFixed(1).replace(/\.0$/, "") + "B";
 }
+
+export const getFullDay = (timestamp) => {
+    let date = new Date(timestamp);
+    return date.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+    });
+};

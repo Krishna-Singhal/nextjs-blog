@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import AnimationWrapper from "@common/page-animation";
 import { useEditor } from "@context/EditorContext";
 import Image from "next/image";

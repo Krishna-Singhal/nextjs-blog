@@ -45,12 +45,12 @@ async function getTrendingBlogs() {
             cache: "force-cache",
             next: { revalidate: 300 },
         });
-        if (!res.ok) throw new Error("Failed to fetch blogs");
+        if (!res.ok) throw new Error("Failed to fetch trending blogs");
 
         const data = await res.json();
         return data.blogs;
     } catch (error) {
-        console.error("Error fetching tags:", error);
+        console.error("Error fetching trending blogs:", error);
         return [];
     }
 }
