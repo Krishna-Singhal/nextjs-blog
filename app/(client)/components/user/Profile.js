@@ -30,6 +30,22 @@ async function fetchUserBlogs({ pageParam = 1, queryKey }) {
     };
 }
 
+const profileStructure = {
+    personal_info: {
+        fullname: "",
+        email: "",
+        bio: "",
+        profile_img: "",
+        username: "",
+    },
+    account_info: {
+        total_posts: "",
+        total_reads: "",
+    },
+    social_links: {},
+    joinedAt: "",
+};
+
 const Profile = ({ initialBlogs, loadedProfile, username }) => {
     const router = useRouter();
     const [tab, setTab] = useState("blogs-published");
@@ -63,7 +79,6 @@ const Profile = ({ initialBlogs, loadedProfile, username }) => {
             fetchProfile();
         } else if (profile && Object.keys(profile).length === 0) {
             router.replace("/404");
-            setProfileLoaded(true);
         }
     }, [profile, router, username]);
 
@@ -131,44 +146,51 @@ const Profile = ({ initialBlogs, loadedProfile, username }) => {
         return () => window.removeEventListener("resize", checkContainerHeight);
     }, [blogs, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-    if (profile === null) return <div>Loading...</div>;
-
-    const {
+    let {
         personal_info: { fullname, username: profileUsername, bio, profile_img },
         account_info: { total_posts, total_reads },
         social_links,
         joinedAt,
-    } = profile;
-    console.log(blogs);
+    } = profile || profileStructure;
 
     return (
         <AnimationWrapper>
             <section className="h-cover md:flex flex-row-reverse items-start gap-5 [1100]:gap-12">
                 <div className="flex flex-col items-center md:items-start gap-5 min-w-[250px] md:w-[50%] md:pl-8 md:border-l md:border-grey md:sticky md:top-[100px] md:py-10">
-                    <div className="w-48 h-48 md:w-32 md:h-32">
-                        <ProfileImage profile_img={profile_img} fullname={fullname} />
-                    </div>
-                    <h1 className="text-2xl font-medium">@{profileUsername}</h1>
-                    <p className="text-xl capitalize h-6">{fullname}</p>
+                    {!profile ? (
+                        <div>Loading...</div>
+                    ) : (
+                        <>
+                            <div className="w-48 h-48 md:w-32 md:h-32">
+                                <ProfileImage src={profile_img} alt={fullname} />
+                            </div>
+                            <h1 className="text-2xl font-medium">@{profileUsername}</h1>
+                            <p className="text-xl capitalize h-6">{fullname}</p>
 
-                    <p>
-                        {total_posts.toLocaleString()} Blogs - {total_reads.toLocaleString()} Reads
-                    </p>
+                            <p>
+                                {total_posts.toLocaleString()} Blogs -{" "}
+                                {total_reads.toLocaleString()} Reads
+                            </p>
 
-                    <div className="flex gap-4 mt-2">
-                        {user?.username == profileUsername && (
-                            <Link href="/settings/edit-profile" className="btn-light rounded-md">
-                                Edit Profile
-                            </Link>
-                        )}
-                    </div>
+                            <div className="flex gap-4 mt-2">
+                                {user?.username == profileUsername && (
+                                    <Link
+                                        href="/settings/edit-profile"
+                                        className="btn-light rounded-md"
+                                    >
+                                        Edit Profile
+                                    </Link>
+                                )}
+                            </div>
 
-                    <AboutUser
-                        className="hidden md:block"
-                        bio={bio}
-                        social_links={social_links}
-                        joinedAt={joinedAt}
-                    />
+                            <AboutUser
+                                className="hidden md:block"
+                                bio={bio}
+                                social_links={social_links}
+                                joinedAt={joinedAt}
+                            />
+                        </>
+                    )}
                 </div>
 
                 <div className="mt-12 md:mt-0 w-full">

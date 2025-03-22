@@ -26,7 +26,7 @@ const TrendingBlogCard = ({ blog, index }) => {
             <div>
                 <div className="flex gap-2 items-center mb-2">
                     <div className="max-w-min max-h-min min-w-5 min-h-5 sm:min-w-6 sm:min-h-6">
-                        <ProfileImage profile_img={profile_img} fullname={fullname} />
+                        <ProfileImage src={profile_img} alt={fullname} />
                     </div>
                     <p className="line-clamp-1">{fullname}</p>
                 </div>
@@ -55,6 +55,9 @@ const TrendingBlogs = ({ trendingBlogs }) => {
 
     return (
         <>
+            <h1 className="font-medium text-xl mb-8">
+                Trending <i className="fi fi-rr-arrow-trend-up"></i>
+            </h1>
             {trendingBlogsLoading ? (
                 "Loading..."
             ) : trendingBlogsData?.length ? (

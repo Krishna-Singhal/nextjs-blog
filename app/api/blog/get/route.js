@@ -6,7 +6,9 @@ import { withDB } from "@/middleware/withDB";
 
 async function handler(req) {
     try {
-        const { slug, draft, mode } = await req.json();
+        const slug = req.nextUrl.searchParams.get("slug");
+        const draft = req.nextUrl.searchParams.get("draft");
+        const mode = req.nextUrl.searchParams.get("mode");
         const incrementVal = mode !== "edit" ? 1 : 0;
 
         const blog = await Blog.findOneAndUpdate(
@@ -18,8 +20,8 @@ async function handler(req) {
                 "author",
                 "personal_info.fullname personal_info.username personal_info.profile_img -_id"
             )
-            .populate("tags", "-_id")
-            .select("title des content banner activity publishedAt slug tags draft -_id");
+            .populate("tags")
+            .select("title des content banner activity publishedAt slug tags draft");
 
         if (!blog) {
             return response(404, "Blog not found");
@@ -43,4 +45,4 @@ async function handler(req) {
     }
 }
 
-export const POST = applyMiddlewares(withDB)(handler);
+export const GET = applyMiddlewares(withDB)(handler);

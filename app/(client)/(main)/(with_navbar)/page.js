@@ -1,8 +1,9 @@
 import { getCookies } from "@/app/server/cookies";
-import Blogs from "@components/home/Blogs";
-import DynamicBlogs from "@components/home/DynamicBlogs";
-import TrendingBlogs from "@components/home/TrendingBlogs";
 import Link from "next/link";
+import Blogs from "@components/home/Blogs";
+import TrendingBlogs from "@components/home/TrendingBlogs";
+import DynamicBlogs from "@components/home/DynamicBlogs";
+import DynamicTrendingBlogs from "@components/home/DynamicTrendingBlogs";
 
 async function getTabs() {
     try {
@@ -91,10 +92,11 @@ const Home = async () => {
                             </div>
                         </div>
                         <div>
-                            <h1 className="font-medium text-xl mb-8">
-                                Trending <i className="fi fi-rr-arrow-trend-up"></i>
-                            </h1>
-                            <TrendingBlogs trendingBlogs={trendingBlogs} />
+                            {user?.access_token ? (
+                                <DynamicTrendingBlogs />
+                            ) : (
+                                <TrendingBlogs trendingBlogs={trendingBlogs} />
+                            )}
                         </div>
                     </div>
                 </div>

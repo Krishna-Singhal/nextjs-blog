@@ -77,7 +77,7 @@ const Navbar = () => {
                             onBlur={handleUserNavToggle}
                         >
                             <button className="w-10 h-10 mt-1">
-                                <ProfileImage profile_img={user.profile_img} fullname={user.fullname} />
+                                <ProfileImage src={user.profile_img} alt={user.fullname} />
                             </button>
                             {userNavPanel && <UserNavigation />}
                         </div>

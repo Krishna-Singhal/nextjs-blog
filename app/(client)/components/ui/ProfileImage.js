@@ -1,23 +1,23 @@
 import Image from "next/image";
 import React from "react";
 
-const ProfileImage = ({ profile_img, fullname }) => {
+const ProfileImage = ({ src, alt }) => {
     return (
         <>
-            {profile_img.includes("api.dicebear.com") ? (
+            {src.includes("api.dicebear.com") ? (
                 <img
-                    src={profile_img}
-                    alt={fullname}
+                    src={src}
+                    alt={alt}
                     className="w-full h-full object-cover rounded-full"
                 />
             ) : (
                 <Image
-                    src={profile_img}
+                    src={src}
                     width={0}
                     height={0}
                     sizes="100vw"
                     className="w-full h-full object-cover rounded-full"
-                    alt={fullname}
+                    alt={alt}
                     referrerPolicy="no-referrer"
                 />
             )}
