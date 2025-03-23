@@ -41,16 +41,14 @@ const TrendingBlogs = ({ trendingBlogs }) => {
     const { data: trendingBlogsData, isLoading: trendingBlogsLoading } = useQuery({
         queryKey: ["trendingBlogs"],
         queryFn: async () => {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/trending`, {
-                cache: "force-cache",
-                next: { revalidate: 3600 },
-            });
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/trending`);
             if (!res.ok) throw new Error("Failed to fetch tabs");
             const data = await res.json();
             return data.blogs;
         },
         initialData: trendingBlogs && trendingBlogs.length ? trendingBlogs : undefined,
         staleTime: 1000 * 60 * 5,
+        cachedTime: 1000 * 60 * 10,
     });
 
     return (

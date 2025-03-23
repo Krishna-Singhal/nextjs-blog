@@ -4,10 +4,10 @@ import Link from "next/link";
 import React, { memo } from "react";
 import { useUser } from "@context/UserContext";
 import LikesCount from "@components/blog/LikesCount";
-import CommentsCount from "@components/blog/CommentsCount";
+import CommentsCount from "@components/blog/comments/Count";
 import { useBlog } from "@context/BlogContext";
 
-const BlogInteraction = memo(({ pills = true }) => {
+const BlogInteraction = memo(({ second = false }) => {
     const { blog, blogStructure, slug } = useBlog();
     const {
         author: {
@@ -19,23 +19,23 @@ const BlogInteraction = memo(({ pills = true }) => {
     return (
         <div
             className={
-                "mt-5 md:mt-10 px-2 py-4" + (pills ? " md:border-t md:border-b border-grey" : "")
+                "mt-5 md:mt-10 px-2 py-4" + (!second ? " md:border-t md:border-b border-grey" : "")
             }
         >
             <div
                 className={`flex ${
-                    pills ? "md:justify-between gap-2 md:gap-6" : "justify-between gap-6"
+                    !second ? "md:justify-between gap-2 md:gap-6" : "justify-between gap-6"
                 }`}
             >
-                <div className={`flex ${pills ? "gap-2 md:gap-7" : "gap-7"}`}>
-                    <LikesCount pills={pills} />
-                    <CommentsCount pills={pills} />
+                <div className={`flex ${!second ? "gap-2 md:gap-7" : "gap-7"}`}>
+                    <LikesCount second={second} />
+                    <CommentsCount second={second} />
                 </div>
 
-                <div className={`flex ${pills ? "gap-2 md:gap-5" : "gap-5"}`}>
+                <div className={`flex ${!second ? "gap-2 md:gap-5" : "gap-5"}`}>
                     <div
                         className={
-                            (pills
+                            (!second
                                 ? "border border-grey h-[38px] md:h-auto px-4 md:border-0 md:p-0 rounded-full "
                                 : "") +
                             "flex gap-2 items-center justify-center text-dark-grey hover:text-black cursor-pointer"
@@ -57,13 +57,13 @@ const BlogInteraction = memo(({ pills = true }) => {
                                 ></path>
                             </svg>
                         </button>
-                        <p className={pills ? "md:hidden" : "hidden"}>Share</p>
+                        <p className={!second ? "md:hidden" : "hidden"}>Share</p>
                     </div>
 
                     {user.username == username && (
                         <div
                             className={
-                                (pills
+                                (!second
                                     ? "border border-grey h-[38px] md:h-auto px-4 md:border-0 md:p-0 rounded-full "
                                     : "") +
                                 "flex gap-2 items-center justify-center text-dark-grey hover:text-black md:hover:underline cursor-pointer"

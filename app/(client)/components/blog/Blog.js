@@ -11,6 +11,8 @@ import SimilarBlogCard from "@components/blog/SimilarBlogCard";
 import Image from "next/image";
 import BlogContent from "@components/blog/BlogContent";
 import { useBlog } from "@context/BlogContext";
+import CommentsSidebar from "@components/blog/comments/Sidebar";
+import Comments from "@components/blog/comments";
 
 const Blog = () => {
     const router = useRouter();
@@ -21,11 +23,7 @@ const Blog = () => {
             const fetchBlog = async () => {
                 try {
                     const res = await fetch(
-                        `${process.env.NEXT_PUBLIC_API_URL}/blog/get?slug=${slug}`,
-                        {
-                            cache: "force-cache",
-                            next: { revalidate: 300 },
-                        }
+                        `${process.env.NEXT_PUBLIC_API_URL}/blog/get?slug=${slug}`
                     );
                     if (!res.ok) throw new Error("Blog not found");
 
@@ -53,11 +51,7 @@ const Blog = () => {
                     const res = await fetch(
                         `${process.env.NEXT_PUBLIC_API_URL}/blog/similar?tags=${tags.join(
                             ","
-                        )}&eliminate_blog=${slug}`,
-                        {
-                            cache: "force-cache",
-                            next: { revalidate: 300 },
-                        }
+                        )}&eliminate_blog=${slug}`
                     );
                     if (!res.ok) throw new Error("Similar blogs not found");
 
@@ -89,6 +83,7 @@ const Blog = () => {
                 "Loading Blog..."
             ) : (
                 <div>
+                    <CommentsSidebar />
                     <div className="max-w-[700px] center py-10 px-[5vw] lg:px-0">
                         <h1 className="blog-title text-black text-[42px] my-5 leading-[52px] font-bold">
                             {title}
@@ -126,7 +121,7 @@ const Blog = () => {
                                 </div>
                             ))}
                         </div>
-                        <BlogInteraction pills={false} />
+                        <BlogInteraction second={true} />
                         {tags?.length && (
                             <div className="mt-5 flex items-center flex-wrap gap-3">
                                 {tags.map((tag, i) => {
@@ -141,6 +136,10 @@ const Blog = () => {
                                 })}
                             </div>
                         )}
+                    </div>
+                    <hr className="my-5" />
+                    <div className="max-w-[700px] center py-10 px-[5vw] lg:px-0">
+                        <Comments />
                     </div>
                     <div className="bg-[#F9F9F9]">
                         <div className="max-w-[700px] center py-10 px-[5vw] lg:px-0 pt-20">

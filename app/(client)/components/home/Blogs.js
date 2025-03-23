@@ -12,8 +12,7 @@ const PAGE_SIZE = 10;
 async function fetchBlogs({ pageParam = 1, queryKey }) {
     const [, tab] = queryKey;
     const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/blog/trending?page=${pageParam}&tag=${tab}`,
-        { cache: "force-cache", next: { revalidate: 300 } }
+        `${process.env.NEXT_PUBLIC_API_URL}/blog/trending?page=${pageParam}&tag=${tab}`
     );
     if (!res.ok) {
         throw new Error("Failed to fetch blogs");
@@ -45,6 +44,7 @@ export default function Blogs({ tabsArray, initialBlogs, defaultTab }) {
         },
         initialData: tabsArray && tabsArray.length ? tabsArray : undefined,
         staleTime: 1000 * 60 * 5,
+        cacheTime: 1000 * 60 * 60,
     });
 
     const infiniteQueryInitialData =
@@ -73,6 +73,7 @@ export default function Blogs({ tabsArray, initialBlogs, defaultTab }) {
         queryFn: fetchBlogs,
         getNextPageParam: (lastPage) => (!lastPage.isLast ? lastPage.nextPage : undefined),
         staleTime: 1000 * 60 * 5,
+        cacheTime: 1000 * 60 * 10,
         initialData: infiniteQueryInitialData,
     });
 

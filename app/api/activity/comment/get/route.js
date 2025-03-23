@@ -5,12 +5,19 @@ import Comment from "@/models/Comment";
 
 async function handler(req) {
     try {
-        const { blog, skip = 0 } = await req.json();
+        const blog = req.nextUrl.searchParams.get("blog");
+        const page = req.nextUrl.searchParams.get("page") || 1;
+
+        if (!blog) {
+            return response(400, "Blog Id is required");
+        }
+
         const maxLimit = process.env.MAX_LIMIT;
+        const skipDocs = (page - 1) * maxLimit;
 
         const comments = await Comment.find({ blog, parentComment: null })
             .sort({ commentedAt: -1 })
-            .skip(skip)
+            .skip(skipDocs)
             .limit(maxLimit)
             .populate(
                 "user",
@@ -25,4 +32,4 @@ async function handler(req) {
     }
 }
 
-export const POST = applyMiddlewares(withDB)(handler);
+export const GET = applyMiddlewares(withDB)(handler);

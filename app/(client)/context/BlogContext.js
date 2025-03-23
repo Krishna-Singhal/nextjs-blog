@@ -18,6 +18,8 @@ export const BlogProvider = ({ children, slug, loadedBlog, loadedSimilarBlogs })
     const [blog, setBlog] = useState(loadedBlog || null);
     const [similarBlogs, setSimilarBlogs] = useState(loadedSimilarBlogs || null);
     const [isLiked, setIsLiked] = useState(false);
+    const [comments, setComments] = useState([]);
+    const [commentsWrapper, setCommentsWrapper] = useState(false);
 
     return (
         <BlogContext.Provider
@@ -30,6 +32,10 @@ export const BlogProvider = ({ children, slug, loadedBlog, loadedSimilarBlogs })
                 isLiked,
                 setIsLiked,
                 slug,
+                comments,
+                setComments,
+                commentsWrapper,
+                setCommentsWrapper,
             }}
         >
             {children}

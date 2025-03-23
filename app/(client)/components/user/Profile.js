@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useUser } from "@context/UserContext";
 import ProfileImage from "@components/ui/ProfileImage";
 import AboutUser from "@components/user/AboutUser";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import NavigationTabs from "@components/ui/NavigationTabs";
 import BlogCard from "../home/BlogCard";
 import NoDataMessage from "../ui/no-data";
@@ -16,8 +16,7 @@ const PAGE_SIZE = 10;
 async function fetchUserBlogs({ pageParam = 1, queryKey }) {
     const [, author] = queryKey;
     const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/blog/search?page=${pageParam}&author=${author}`,
-        { cache: "force-cache", next: { revalidate: 300 } }
+        `${process.env.NEXT_PUBLIC_API_URL}/blog/search?page=${pageParam}&author=${author}`
     );
     if (!res.ok) {
         throw new Error("Failed to fetch blogs");
@@ -29,6 +28,30 @@ async function fetchUserBlogs({ pageParam = 1, queryKey }) {
         isLast: data.blogs.length < PAGE_SIZE,
     };
 }
+
+const fetchProfile = async (username) => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile/get?username=${username}`);
+
+    if (!res.ok) throw new Error("Profile not found");
+
+    const data = await res.json();
+    if (!data.profile || Object.keys(data.profile).length === 0) {
+        throw new Error("Empty profile data");
+    }
+
+    return data.profile;
+};
+
+const useProfile = (username, loadedProfile) => {
+    return useQuery({
+        queryKey: ["profile", username],
+        queryFn: () => fetchProfile(username),
+        initialData: loadedProfile || undefined,
+        staleTime: 5 * 60 * 1000,
+        cacheTime: 10 * 60 * 1000,
+        retry: false,
+    });
+};
 
 const profileStructure = {
     personal_info: {
@@ -49,38 +72,13 @@ const profileStructure = {
 const Profile = ({ initialBlogs, loadedProfile, username }) => {
     const router = useRouter();
     const [tab, setTab] = useState("blogs-published");
-    const [profile, setProfile] = useState(loadedProfile || null);
-    const [profileLoaded, setProfileLoaded] = useState(false);
     const { user } = useUser();
 
-    useEffect(() => {
-        if (profile === null) {
-            const fetchProfile = async () => {
-                try {
-                    const res = await fetch(
-                        `${process.env.NEXT_PUBLIC_API_URL}/profile/get?username=${username}`,
-                        {
-                            cache: "force-cache",
-                            next: { revalidate: 300 },
-                        }
-                    );
-                    if (!res.ok) throw new Error("Profile not found");
+    const { data: profile, isLoading, error: profileError } = useProfile(username, loadedProfile);
 
-                    const data = await res.json();
-                    if (!data.profile || Object.keys(data.profile).length === 0) {
-                        throw new Error("Empty profile data");
-                    }
-                    setProfile(data.profile);
-                    setProfileLoaded(true);
-                } catch (error) {
-                    router.replace("/404");
-                }
-            };
-            fetchProfile();
-        } else if (profile && Object.keys(profile).length === 0) {
-            router.replace("/404");
-        }
-    }, [profile, router, username]);
+    if (profileError) {
+        router.replace("/404");
+    }
 
     const infiniteQueryInitialData =
         initialBlogs && initialBlogs.length
@@ -108,8 +106,9 @@ const Profile = ({ initialBlogs, loadedProfile, username }) => {
         queryFn: fetchUserBlogs,
         getNextPageParam: (lastPage) => (!lastPage.isLast ? lastPage.nextPage : undefined),
         staleTime: 1000 * 60 * 5,
+        cacheTime: 1000 * 60 * 10,
         initialData: infiniteQueryInitialData,
-        enabled: profileLoaded,
+        enabled: !!profile,
     });
 
     const blogs = loadedData ? loadedData.pages.flatMap((page) => page.blogs) : [];
@@ -157,15 +156,15 @@ const Profile = ({ initialBlogs, loadedProfile, username }) => {
         <AnimationWrapper>
             <section className="h-cover md:flex flex-row-reverse items-start gap-5 [1100]:gap-12">
                 <div className="flex flex-col items-center md:items-start gap-5 min-w-[250px] md:w-[50%] md:pl-8 md:border-l md:border-grey md:sticky md:top-[100px] md:py-10">
-                    {!profile ? (
+                    {isLoading || profileError ? (
                         <div>Loading...</div>
                     ) : (
                         <>
                             <div className="w-48 h-48 md:w-32 md:h-32">
                                 <ProfileImage src={profile_img} alt={fullname} />
                             </div>
-                            <h1 className="text-2xl font-medium">@{profileUsername}</h1>
-                            <p className="text-xl capitalize h-6">{fullname}</p>
+                            <h1 className="text-2xl capitalize font-medium">{fullname}</h1>
+                            <p className="text-xl h-6">@{profileUsername}</p>
 
                             <p>
                                 {total_posts.toLocaleString()} Blogs -{" "}

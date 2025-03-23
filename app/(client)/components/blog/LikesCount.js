@@ -26,7 +26,7 @@ const fetchLike = async (access_token, _id) => {
     return !!data.liked;
 };
 
-const LikesCount = ({ pills }) => {
+const LikesCount = ({ second }) => {
     const { user } = useUser();
     let { isLiked, setIsLiked, blog, blogStructure, setBlog } = useBlog();
     let {
@@ -34,7 +34,7 @@ const LikesCount = ({ pills }) => {
     } = blog || blogStructure;
 
     const { data, isLoading, error } = useQuery({
-        queryKey: ["likes", blog._id],
+        queryKey: ["likesCount", blog._id],
         queryFn: () => fetchLikes(blog.slug),
         staleTime: 60000,
         refetchOnWindowFocus: true,
@@ -43,8 +43,7 @@ const LikesCount = ({ pills }) => {
     const { data: isLikedData } = useQuery({
         queryKey: ["isLiked", blog._id],
         queryFn: () => fetchLike(user.access_token, blog._id),
-        staleTime: 5000,
-        refetchOnWindowFocus: true,
+        staleTime: 300000,
         enabled: !!user?.access_token,
     });
 
@@ -86,7 +85,7 @@ const LikesCount = ({ pills }) => {
             <div className="flex items-center">
                 <Skeleton
                     className={
-                        pills
+                        !second
                             ? "md:w-10 md:h-6 w-[72px] h-[35px] !rounded-full md:!rounded-lg"
                             : "w-10 h-6"
                     }
@@ -97,7 +96,7 @@ const LikesCount = ({ pills }) => {
     return (
         <div
             className={
-                (pills
+                (!second
                     ? "border border-grey h-[38px] md:h-auto px-4 md:border-0 md:p-0 rounded-full "
                     : "") + "flex gap-2 items-center justify-center group cursor-pointer"
             }
@@ -105,8 +104,10 @@ const LikesCount = ({ pills }) => {
             <button onClick={handleClick} className="flex items-center justify-center">
                 <i
                     className={
-                        "fi fi-rr-heart mt-1 text-xl " +
-                        (isLiked ? "text-red" : "text-dark-grey group-hover:text-black")
+                        "fi mt-1 text-xl " +
+                        (isLiked
+                            ? "fi-sr-heart text-red"
+                            : "fi-rr-heart text-dark-grey group-hover:text-black")
                     }
                 ></i>
             </button>

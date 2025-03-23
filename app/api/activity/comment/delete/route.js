@@ -10,12 +10,19 @@ async function deleteComments(commentId) {
     const comment = await Comment.findOneAndDelete({ _id: commentId });
 
     if (!comment) return;
-
     await Notification.deleteMany({ comment: commentId });
 
-    const replies = await Comment.find({ parentComment: commentId });
-    for (const reply of replies) {
-        await deleteComments(reply._id);
+    if (comment.parentComment) {
+        await Comment.findOneAndUpdate(
+            { _id: comment.parentComment },
+            { $inc: { "activity.total_replies": -1 } }
+        );
+    } else {
+
+        const replies = await Comment.find({ parentComment: commentId });
+        for (const reply of replies) {
+            await deleteComments(reply._id);
+        }
     }
 
     await Blog.findOneAndUpdate(

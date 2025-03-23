@@ -42,7 +42,10 @@ async function handler(req) {
         };
 
         if (parentComment) {
-            const parentCommentObj = await Comment.findOne({ _id: parentComment });
+            const parentCommentObj = await Comment.findOneAndUpdate(
+                { _id: parentComment },
+                { $inc: { "activity.total_replies": 1 } }
+            );
 
             notificationObj.notification_for = parentCommentObj.user;
 
@@ -59,9 +62,9 @@ async function handler(req) {
         return response(200, "success", {
             comment: {
                 _id: commentFile._id,
+                activity: commentFile.activity,
                 comment,
                 commentedAt: commentFile.commentedAt,
-                commented_by: user_id,
             },
         });
     } catch (err) {

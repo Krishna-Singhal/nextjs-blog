@@ -20,6 +20,12 @@ const commentSchema = mongoose.Schema(
             type: Schema.Types.ObjectId,
             ref: "Comment",
         },
+        activity: {
+            total_replies: {
+                type: Number,
+                default: 0,
+            },
+        },
     },
     {
         timestamps: {

@@ -98,13 +98,13 @@ const BlogEditor = () => {
     };
 
     const handlePublishEvent = () => {
-        // if (!banner.length) {
-        //     return toast.error("You must provide a blog banner to publish the blog.");
-        // }
+        if (!banner.length) {
+            return toast.error("You must provide a blog banner to publish the blog.");
+        }
 
-        // if (!title.length) {
-        //     return toast.error("You must provide a blog title.");
-        // }
+        if (!title.length) {
+            return toast.error("You must provide a blog title.");
+        }
 
         if (textEditor.isReady) {
             textEditor.save().then((outputData) => {

@@ -18,7 +18,7 @@ async function Search({ pageParam = 1, queryKey }) {
     } else {
         url = `${process.env.NEXT_PUBLIC_API_URL}/profile/search?page=${pageParam}&query=${query}`;
     }
-    const res = await fetch(url, { cache: "force-cache", next: { revalidate: 300 } });
+    const res = await fetch(url);
     if (!res.ok) {
         throw new Error("Failed to fetch blogs");
     }
@@ -66,6 +66,7 @@ export const BlogSearchResults = ({ query, initialBlogs }) => {
         queryFn: Search,
         getNextPageParam: (lastPage) => (!lastPage.isLast ? lastPage.nextPage : undefined),
         staleTime: 1000 * 60 * 5,
+        cacheTime: 1000 * 60 * 10,
         initialData: infiniteQueryInitialData,
     });
 
