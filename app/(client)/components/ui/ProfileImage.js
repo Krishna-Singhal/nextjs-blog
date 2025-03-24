@@ -4,11 +4,11 @@ import React from "react";
 const ProfileImage = ({ src = "", alt = "", className }) => {
     return (
         <>
-            {src.includes("api.dicebear.com") ? (
+            {src?.includes("api.dicebear.com") ? (
                 <img
                     src={src}
-                    alt={alt}
-                    className={"w-full h-full object-cover rounded-full " + className}
+                    alt={alt || "Profile Image"}
+                    className={"w-full h-full object-cover rounded-full border " + className}
                 />
             ) : (
                 <Image
@@ -16,8 +16,8 @@ const ProfileImage = ({ src = "", alt = "", className }) => {
                     width={0}
                     height={0}
                     sizes="100vw"
-                    className={"w-full h-full object-cover rounded-full " + className}
-                    alt={alt}
+                    className={"w-full h-full object-cover rounded-full border " + className}
+                    alt={alt || "Profile Image"}
                     referrerPolicy="no-referrer"
                     onError={(e) => {
                         e.target.onError = null;

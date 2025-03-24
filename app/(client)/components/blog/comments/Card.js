@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProfileImage from "@components/ui/ProfileImage";
 import Link from "next/link";
 import { timeAgo } from "@common/functions";
@@ -48,7 +48,7 @@ const CommentCard = ({ index, commentData, isReply = false, ref = null, isLast =
         activity: { total_replies },
         commentedAt,
     } = commentData;
-    const { comments, setComments } = useBlog();
+    const { setComments } = useBlog();
     const [isReplying, setIsReplying] = useState(false);
     const [showReplies, setShowReplies] = useState(false);
 
@@ -64,6 +64,7 @@ const CommentCard = ({ index, commentData, isReply = false, ref = null, isLast =
         queryFn: fetchReplies,
         getNextPageParam: (lastPage) => (!lastPage.isLast ? lastPage.nextPage : undefined),
         staleTime: 1000 * 60 * 5,
+        staleTime: 1000 * 60 * 10,
         initialData: undefined,
         enabled: showReplies,
     });
@@ -80,43 +81,6 @@ const CommentCard = ({ index, commentData, isReply = false, ref = null, isLast =
             });
         }
     }, [repliesData]);
-
-    const observer = useRef(null);
-    const lastReplyElementRef = useCallback(
-        (node) => {
-            if (isFetchingNextPage) return;
-            if (observer.current) observer.current.disconnect();
-            observer.current = new IntersectionObserver(
-                (entries) => {
-                    if (entries[0].isIntersecting && hasNextPage) {
-                        fetchNextPage();
-                    }
-                },
-                {
-                    threshold: 0.5,
-                }
-            );
-            if (node) observer.current.observe(node);
-        },
-        [isFetchingNextPage, hasNextPage, fetchNextPage]
-    );
-
-    const containerRef = useRef(null);
-    useEffect(() => {
-        const checkContainerHeight = () => {
-            if (
-                containerRef.current &&
-                containerRef.current.offsetHeight < window.innerHeight &&
-                hasNextPage &&
-                !isFetchingNextPage
-            ) {
-                fetchNextPage();
-            }
-        };
-        checkContainerHeight();
-        window.addEventListener("resize", checkContainerHeight);
-        return () => window.removeEventListener("resize", checkContainerHeight);
-    }, [comments, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
     const handleReplyClick = () => {
         if (user?.access_token) {
@@ -165,9 +129,7 @@ const CommentCard = ({ index, commentData, isReply = false, ref = null, isLast =
 
     return (
         <div ref={ref}>
-            <div
-                className={"pb-5 " + (isReply ? "ml-6 border-l-[3px] border-grey pl-6" : "w-full")}
-            >
+            <div className={"pb-5 " + (isReply ? "" : "w-full")}>
                 <div className="flex gap-5 items-center">
                     <div className="w-8 h-8">
                         <ProfileImage src={profile_img} alt={fullname} />
@@ -180,7 +142,7 @@ const CommentCard = ({ index, commentData, isReply = false, ref = null, isLast =
                     </div>
                 </div>
                 <p className="font-gelasio text-base text-black leading-6 mt-3">{comment}</p>
-                <div className="ml-3 flex gap-5 items-center my-4">
+                <div className="flex gap-2 items-center my-4">
                     {!isReply && total_replies > 0 && (
                         <button
                             onClick={() => {
@@ -192,7 +154,7 @@ const CommentCard = ({ index, commentData, isReply = false, ref = null, isLast =
                             {showReplies ? "Hide " : `Show ${total_replies} `}replies
                         </button>
                     )}
-                    <button className="underline text-sm" onClick={handleReplyClick}>
+                    <button className="underline text-sm px-3" onClick={handleReplyClick}>
                         Reply
                     </button>
 
@@ -220,54 +182,75 @@ const CommentCard = ({ index, commentData, isReply = false, ref = null, isLast =
                     </div>
                 )}
 
-                <div ref={containerRef}>
-                    {commentData.addedReplies &&
-                        commentData.addedReplies?.length &&
-                        commentData.addedReplies.map((reply, i) => {
-                            const isLast = i === commentData.addedReplies.length - 1;
-                            return (
-                                <AnimationWrapper
-                                    key={i}
-                                    transition={{ duration: 1, delay: i * 0.1 }}
-                                >
-                                    <CommentCard
-                                        index={index}
-                                        commentData={reply}
-                                        isReply={true}
-                                        isLast={
-                                            isLast &&
-                                            (!showReplies ||
-                                                !(
-                                                    commentData.replies &&
-                                                    commentData.replies?.length
-                                                ))
-                                        }
-                                    />
-                                </AnimationWrapper>
-                            );
-                        })}
+                {!isReply && (
+                    <div className="ml-5 border-l-[3px] border-grey pl-6">
+                        {commentData.addedReplies &&
+                            commentData.addedReplies?.length &&
+                            commentData.addedReplies.map((reply, i) => {
+                                const isLast = i === commentData.addedReplies.length - 1;
+                                return (
+                                    <AnimationWrapper
+                                        key={i}
+                                        transition={{ duration: 1, delay: i * 0.1 }}
+                                    >
+                                        <CommentCard
+                                            index={index}
+                                            commentData={reply}
+                                            isReply={true}
+                                            isLast={
+                                                isLast &&
+                                                (!showReplies ||
+                                                    !(
+                                                        commentData.replies &&
+                                                        commentData.replies?.length
+                                                    ))
+                                            }
+                                        />
+                                    </AnimationWrapper>
+                                );
+                            })}
 
-                    {showReplies &&
-                        commentData.replies &&
-                        commentData.replies?.length > 0 &&
-                        commentData.replies.map((reply, i) => {
-                            const isLast = i === commentData.replies.length - 1;
-                            return (
-                                <AnimationWrapper
-                                    key={i}
-                                    transition={{ duration: 1, delay: i * 0.1 }}
-                                >
-                                    <CommentCard
-                                        index={index}
-                                        commentData={reply}
-                                        isReply={true}
-                                        isLast={isLast}
-                                        ref={isLast ? lastReplyElementRef : null}
-                                    />
-                                </AnimationWrapper>
-                            );
-                        })}
-                </div>
+                        {showReplies &&
+                            commentData.replies &&
+                            commentData.replies?.length > 0 &&
+                            commentData.replies.map((reply, i) => {
+                                const isLast = i === commentData.replies.length - 1;
+                                return (
+                                    <AnimationWrapper
+                                        key={i}
+                                        transition={{ duration: 1, delay: i * 0.1 }}
+                                    >
+                                        <CommentCard
+                                            index={index}
+                                            commentData={reply}
+                                            isReply={true}
+                                            isLast={isLast}
+                                        />
+                                    </AnimationWrapper>
+                                );
+                            })}
+                    </div>
+                )}
+
+                {showReplies &&
+                    !isReply &&
+                    hasNextPage &&
+                    status == "success" &&
+                    !isFetchingNextPage && (
+                        <button
+                            className="ml-5 mt-5 pl-6 text-purple hover:text-purple/80"
+                            onClick={() => {
+                                fetchNextPage();
+                            }}
+                        >
+                            Load more replies (
+                            {total_replies -
+                                ((commentData.replies?.length || 0) +
+                                    (commentData.addedReplies?.length || 0))}
+                            )
+                        </button>
+                    )}
+
                 {!isLast && <hr className="border-grey w-full mt-4" />}
             </div>
         </div>

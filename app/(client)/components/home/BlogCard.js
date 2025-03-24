@@ -90,7 +90,7 @@ const BlogCard = ({ skeleton, blog }) => {
                                                         ></path>
                                                     </svg>
                                                     <span className="!text-base">
-                                                        {formatCount(total_likes)}
+                                                        {formatCount(total_comments)}
                                                     </span>
                                                 </div>
                                             </div>

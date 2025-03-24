@@ -12,8 +12,8 @@ async function handler(req) {
             return response(400, "Blog Id is required");
         }
 
-        const maxLimit = process.env.MAX_LIMIT;
-        const skipDocs = (page - 1) * maxLimit;
+        let maxLimit = process.env.MAX_LIMIT;
+        let skipDocs = (page - 1) * maxLimit;
 
         const comments = await Comment.find({ blog, parentComment: null })
             .sort({ commentedAt: -1 })

@@ -8,20 +8,23 @@ export const UserProvider = ({ children, initialUser }) => {
     const [user, setUser] = useState(initialUser);
     const [loading, setLoading] = useState(!initialUser);
 
+    const fetchUser = async () => {
+        setLoading(true);
+        const userData = await getCookies("user");
+        setUser(userData || {});
+        setLoading(false);
+    };
+
     useEffect(() => {
         if (!initialUser) {
-            const fetchUser = async () => {
-                const userData = await getCookies("user");
-                setUser(userData || {});
-                setLoading(false);
-            };
-
             fetchUser();
         }
     }, [initialUser]);
 
     return (
-        <UserContext.Provider value={{ user, loading, setUser }}>{children}</UserContext.Provider>
+        <UserContext.Provider value={{ user, loading, setUser, refetchUser: fetchUser }}>
+            {children}
+        </UserContext.Provider>
     );
 };
 

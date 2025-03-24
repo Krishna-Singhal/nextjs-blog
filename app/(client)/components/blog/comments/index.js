@@ -24,7 +24,7 @@ const fetchComments = async ({ pageParam = 1, queryKey }) => {
     };
 };
 
-const Comments = () => {
+const Comments = ({ showMinimal = false }) => {
     let { blog, comments, setComments } = useBlog();
     const { user } = useUser();
 
@@ -99,7 +99,7 @@ const Comments = () => {
                 <div>{user.fullname || "Write a comment"}</div>
             </div>
             <CommentField action="comment" />
-            <hr className="border-grey my-10 w-[120%] -ml-5" />
+            <hr className={"border-grey my-10 " + (!showMinimal ? "w-[120%] -ml-5" : "w-full")} />
             <div ref={containerRef}>
                 {status === "pending" ? (
                     <p>Loading skeleton...</p>
@@ -107,22 +107,28 @@ const Comments = () => {
                     <p>Error loading comments: {error.message}</p>
                 ) : comments?.length ? (
                     <div className="comments-list">
-                        {comments.map((comment, index) => {
-                            const isLast = index === comments.length - 1;
-                            return (
-                                <AnimationWrapper
-                                    key={index}
-                                    transition={{ duration: 1, delay: index * 0.1 }}
-                                >
-                                    <CommentCard
-                                        index={index}
-                                        commentData={comment}
-                                        ref={isLast ? lastCommentElementRef : null}
-                                        isLast={isLast}
-                                    />
-                                </AnimationWrapper>
-                            );
-                        })}
+                        {comments
+                            .slice(0, showMinimal ? 3 : comments.length)
+                            .map((comment, index, filteredComments) => {
+                                const isLast = index === filteredComments.length - 1;
+                                return (
+                                    <AnimationWrapper
+                                        key={index}
+                                        transition={{ duration: 1, delay: index * 0.1 }}
+                                    >
+                                        <CommentCard
+                                            index={index}
+                                            commentData={comment}
+                                            ref={
+                                                isLast && !showMinimal
+                                                    ? lastCommentElementRef
+                                                    : null
+                                            }
+                                            isLast={isLast}
+                                        />
+                                    </AnimationWrapper>
+                                );
+                            })}
                     </div>
                 ) : (
                     <NoDataMessage message="No comments to show!" />

@@ -139,7 +139,7 @@ const Blog = () => {
                     </div>
                     <hr className="my-5" />
                     <div className="max-w-[700px] center py-10 px-[5vw] lg:px-0">
-                        <Comments />
+                        <Comments showMinimal={true} />
                     </div>
                     <div className="bg-[#F9F9F9]">
                         <div className="max-w-[700px] center py-10 px-[5vw] lg:px-0 pt-20">
