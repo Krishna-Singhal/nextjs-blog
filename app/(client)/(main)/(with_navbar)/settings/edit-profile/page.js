@@ -5,7 +5,7 @@ import AnimationWrapper from "@common/page-animation";
 import InputBox from "@components/ui/InputBox";
 import ProfileImage from "@components/ui/ProfileImage";
 import { useUser } from "@context/UserContext";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -61,10 +61,10 @@ const EditProfilePage = () => {
     let bioLimit = 150;
     let {
         personal_info: { fullname, username: profileUsername, email, bio },
-        account_info: { total_posts, total_reads },
         social_links,
-        joinedAt,
     } = profile || profileStructure;
+    const editProfileForm = useRef();
+    const queryClient = useQueryClient();
     const [charactersLeft, setCharactersLeft] = useState(bioLimit);
 
     const handleCharacterChange = (e) => {
@@ -106,13 +106,68 @@ const EditProfilePage = () => {
         }
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        let form = new FormData(editProfileForm.current);
+        let formData = {};
+
+        for (let [key, value] of form.entries()) {
+            formData[key] = value;
+        }
+
+        let { username, bio, youtube, facebook, twitter, github, instagram, website } = formData;
+
+        if (username.length <= 3) {
+            toast.error("Username must be at least 4 characters long.");
+            return;
+        }
+
+        if (bio.length > bioLimit) {
+            toast.error(`Bio must be ${bioLimit} characters or less.`);
+            return;
+        }
+
+        let loadingToast = toast.loading("Updating profile...");
+        e.target.disabled = true;
+
+        try {
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/profile/update-profile`,
+                {
+                    method: "POST",
+                    headers: { Authorization: "Bearer " + user.access_token },
+                    body: JSON.stringify({
+                        username,
+                        bio,
+                        social_links: { youtube, facebook, twitter, github, instagram, website },
+                    }),
+                }
+            );
+            const res = await response.json();
+            if (!response.ok) throw new Error(res.message);
+
+            if (username != user.username) {
+                refetchUser();
+            } else {
+                queryClient.invalidateQueries(["profile", username]);
+            }
+            toast.dismiss(loadingToast);
+            e.target.disabled = false;
+            toast.success("Profile updated successfully.");
+        } catch (err) {
+            toast.dismiss(loadingToast);
+            e.target.disabled = false;
+            toast.error(err.message);
+        }
+    };
+
     return (
         <AnimationWrapper>
             {isLoading ? (
                 "Loading..."
             ) : (
-                <form action="">
-                    <h1 className="hidden md:block">Edit Profile</h1>
+                <form ref={editProfileForm}>
+                    <h1 className="hidden md:block text-2xl">Edit Profile</h1>
                     <div className="flex flex-col lg:flex-row items-center py-10 gap-8 lg:gap-10">
                         <div className="center lg:mx-0 mb-5">
                             <label
@@ -179,7 +234,7 @@ const EditProfilePage = () => {
 
                     <p className="mt-1 text-dark-grey">{charactersLeft} characters left</p>
 
-                    <p className="my-6 text-dark-grey">Add your social handles below</p>
+                    <p className="my-6 text-xl text-black">Add your social handles below</p>
 
                     <div className="md:grid md:grid-cols-2 gap-x-6">
                         {Object.keys(social_links).map((key, i) => {
@@ -197,7 +252,11 @@ const EditProfilePage = () => {
                             );
                         })}
                     </div>
-                    <button className="btn-dark w-auto px-10" type="submit">
+                    <button
+                        className="btn-dark w-auto px-10 mb-10"
+                        type="submit"
+                        onClick={handleSubmit}
+                    >
                         Update
                     </button>
                 </form>

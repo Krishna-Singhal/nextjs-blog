@@ -1,3 +1,4 @@
+import { getCookies, setCookie } from "@/app/server/cookies";
 import { withAuth } from "@/middleware/withAuth";
 import { withDB } from "@/middleware/withDB";
 import User from "@/models/User";
@@ -10,11 +11,11 @@ async function handler(req) {
         const bioLimit = 150;
 
         if (username.length < 3) {
-            return response(403, "Username must be at least 3 characters");
+            return response(400, "Username must be at least 3 characters");
         }
 
         if (bio.length > bioLimit) {
-            return response(403, `Bio must be ${bioLimit} characters or less`);
+            return response(400, `Bio must be ${bioLimit} characters or less`);
         }
 
         try {
@@ -28,14 +29,14 @@ async function handler(req) {
                         socialLinksArr[i] !== "website"
                     ) {
                         return response(
-                            403,
+                            400,
                             `${socialLinksArr[i]} link is invalid. You must enter a full link.`
                         );
                     }
                 }
             }
         } catch {
-            return response(403, "You must provide full social links with http(s) included");
+            return response(400, "You must provide full social links with http(s) included");
         }
 
         const updateObj = {
@@ -44,9 +45,14 @@ async function handler(req) {
             social_links,
         };
 
-        await User.findByIdAndUpdate(req.user, updateObj, {
+        await User.findByIdAndUpdate({ _id: req.user }, updateObj, {
             runValidators: true,
         });
+
+        const user = await getCookies("user");
+        if (user.username != username) {
+            await setCookie("user", { ...user, username });
+        }
         return response(200, "success", { username });
     } catch (err) {
         if (err.code === 11000) {

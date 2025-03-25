@@ -9,7 +9,7 @@ const InputBox = ({ name, type, id, value, placeholder, icon, disabled }) => {
                 placeholder={placeholder}
                 defaultValue={value}
                 id={id}
-                className="input-box"
+                className="input-box placeholder:text-dark-grey"
                 disabled={disabled}
             />
             <i className={`fi ${icon} input-icon`}></i>
