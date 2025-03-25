@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import NavLink from "@components/ui/NavLink";
+import { useUser } from "@context/UserContext";
 const Sidebar = ({ children }) => {
+    const { newNotificationsAvailable } = useUser();
     const page = location.pathname.split("/").filter(Boolean).pop();
     const [pageState, setPageState] = useState(page?.replace("-", " "));
     const [showSideNav, setShowSideNav] = useState(false);
@@ -47,7 +49,7 @@ const Sidebar = ({ children }) => {
                 </div>
                 <div
                     className={
-                        "min-w-[200px] h-[calc(100vh-60px-60px)] md:h-cover md:sticky md:top-24 overflow-y-auto md:p-6 md:pr-0 md:border-grey md:border-r absolute top-[84px] bg-white md:w-full w-[calc(100%+80px)] px-16 md:ml-0 -ml-7 duration-500 md:opacity-100 md:pointer-events-auto " +
+                        "min-w-[200px] h-[calc(100vh-60px-60px)] md:h-cover md:sticky md:top-[60px] overflow-y-auto md:p-6 md:pr-0 md:border-grey md:border-r absolute top-[84px] bg-white md:w-full w-[calc(100%+80px)] px-16 md:ml-0 -ml-7 duration-500 md:opacity-100 md:pointer-events-auto " +
                         (!showSideNav ? "opacity-0 pointer-events-none" : "")
                     }
                 >
@@ -71,7 +73,12 @@ const Sidebar = ({ children }) => {
                         }}
                         className="sidebar-link"
                     >
-                        <i className="fi fi-rr-bell"></i>
+                        <div className="relative">
+                            <i className="fi fi-rr-bell"></i>
+                            {newNotificationsAvailable && (
+                                <span className="w-2 h-2 bg-red rounded-full absolute z-10 top-0 right-0"></span>
+                            )}
+                        </div>
                         Notifications
                     </NavLink>
                     <NavLink

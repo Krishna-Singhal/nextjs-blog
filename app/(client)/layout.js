@@ -1,6 +1,7 @@
 import "@styles/globals.css";
 import { UserProvider } from "@context/UserContext";
 import { getCookies } from "@/app/server/cookies";
+import Providers from "@common/providers";
 
 export const metadata = {
     title: "Create Next App",
@@ -13,7 +14,7 @@ export default async function RootLayout({ children }) {
     return (
         <html lang="en">
             <body>
-                <UserProvider initialUser={user}>{children}</UserProvider>
+                <Providers initialUser={user}>{children}</Providers>
             </body>
         </html>
     );

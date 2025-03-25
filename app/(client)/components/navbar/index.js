@@ -15,7 +15,7 @@ const Navbar = () => {
     const router = useRouter();
 
     const { toggleModal } = useModal();
-    const { user } = useUser();
+    const { user, newNotificationsAvailable } = useUser();
 
     const handleUserNavToggle = () => {
         setuserNavPanel((p) => !p);
@@ -69,6 +69,9 @@ const Navbar = () => {
                         <Link href="dashboard/notifications">
                             <button className="w-10 h-10 rounded-full bg-grey relative hover:bg-black/10">
                                 <i className="fi fi-rr-bell text-xl block mt-1 text-dark-grey hover:text-black"></i>
+                                {newNotificationsAvailable && (
+                                    <span className="w-2 h-2 bg-red rounded-full absolute z-10 top-2 right-3"></span>
+                                )}
                             </button>
                         </Link>
                         <div

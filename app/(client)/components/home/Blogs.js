@@ -31,10 +31,7 @@ export default function Blogs({ tabsArray, initialBlogs, defaultTab }) {
     const { data: tabs, isLoading: tabsLoading } = useQuery({
         queryKey: ["tabs"],
         queryFn: async () => {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tags/trending`, {
-                cache: "force-cache",
-                next: { revalidate: 3600 },
-            });
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tags/trending`);
             if (!res.ok) throw new Error("Failed to fetch tabs");
             const data = await res.json();
             return [

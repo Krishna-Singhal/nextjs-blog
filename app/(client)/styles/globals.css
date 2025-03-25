@@ -55,11 +55,11 @@
     }
 
     .btn-dark {
-        @apply whitespace-nowrap bg-black text-white rounded-full py-2 px-4 text-xl hover:bg-opacity-80;
+        @apply whitespace-nowrap bg-black text-white capitalize rounded-full py-2 px-4 text-xl hover:bg-opacity-80;
     }
 
     .btn-light {
-        @apply btn-dark bg-grey text-black;
+        @apply btn-dark bg-grey text-black capitalize;
     }
 
     .input-box {

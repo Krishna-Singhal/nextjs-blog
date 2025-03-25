@@ -29,7 +29,14 @@ async function handler(req) {
                 "user",
                 "personal_info.fullname personal_info.username personal_info.profile_img -_id"
             )
-            .populate("comment", "comment")
+            .populate({
+                path: "comment",
+                select: "comment parentComment",
+                populate: {
+                    path: "parentComment",
+                    select: "comment",
+                },
+            })
             .populate("reply", "comment")
             .sort({ createdAt: -1 })
             .select("createdAt type seen reply");
@@ -39,7 +46,13 @@ async function handler(req) {
             .limit(maxLimit)
             .catch(console.error);
 
-        return response(200, "success", { notifications });
+        const processedNotifications = notifications.map((notification) => ({
+            ...notification.toObject(),
+            comment: notification.comment || {},
+            reply: notification.reply || {},
+        }));
+
+        return response(200, "success", { notifications: processedNotifications });
     } catch (err) {
         console.error(err);
         return response(500, "Internal Server Error", { error: err.message });

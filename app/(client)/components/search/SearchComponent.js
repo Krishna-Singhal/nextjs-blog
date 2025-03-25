@@ -179,8 +179,7 @@ export const ProfileSearchResults = ({ query, initialProfiles }) => {
         queryKey: ["profiles", query],
         queryFn: async () => {
             const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/profile/search?query=${query}`,
-                { cache: "force-cache", next: { revalidate: 300 } }
+                `${process.env.NEXT_PUBLIC_API_URL}/profile/search?query=${query}`
             );
             if (!res.ok) throw new Error("Failed to fetch profiles");
             const data = await res.json();

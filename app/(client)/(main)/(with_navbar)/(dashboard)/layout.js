@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect } from "react";
-import Sidebar from "@components/settings/Sidebar";
-import { useUser } from "@/app/(client)/context/UserContext";
+import Sidebar from "@components/dashboard/Sidebar";
+import { useUser } from "@context/UserContext";
 import { useRouter } from "next/navigation";
 
 const SettingsLayout = ({ children }) => {
