@@ -13,12 +13,8 @@ const blogStructure = {
 
 const EditorContext = createContext({});
 
-export const EditorProvider = ({ children, loadedBlog = {} }) => {
-    const [blog, setBlog] = useState(
-        Object.keys(loadedBlog).length == 0
-            ? blogStructure
-            : { ...loadedBlog, tags: loadedBlog.tags.map((tag) => tag.name) }
-    );
+export const EditorProvider = ({ children }) => {
+    const [blog, setBlog] = useState(blogStructure);
     const [editorState, setEditorState] = useState("editor");
     const [textEditor, setTextEditor] = useState({ isReady: false });
 

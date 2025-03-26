@@ -5,7 +5,7 @@ import Image from "next/image";
 import Topic from "@components/editor/Topic";
 import toast from "react-hot-toast";
 import { useUser } from "@context/UserContext";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import SuggestionInput from "@components/ui/SuggestionInput ";
 
 const PublishForm = () => {
@@ -13,6 +13,7 @@ const PublishForm = () => {
     let tagsLimit = 10;
     const { user } = useUser();
     const router = useRouter();
+    const { slug } = useParams();
 
     const {
         blog,
@@ -48,7 +49,6 @@ const PublishForm = () => {
             toast.error(`You can only add up to ${tagsLimit} tags`);
         }
     };
-
     const publishBlog = async (e) => {
         if (!title.length) {
             return toast.error("You must provide a blog title to publish the blog.");
@@ -78,7 +78,7 @@ const PublishForm = () => {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${user.access_token}`,
                 },
-                body: JSON.stringify({ title, banner, des, content, tags, draft: false }),
+                body: JSON.stringify({ title, banner, des, content, tags, draft: false, slug }),
             });
 
             const data = await res.json();
@@ -87,7 +87,7 @@ const PublishForm = () => {
             if (res.ok) {
                 toast.success("Blog Published.");
                 setTimeout(() => {
-                    router.push("/");
+                    router.push("/dashboard/blogs");
                 }, 500);
             } else {
                 toast.error(data.message);

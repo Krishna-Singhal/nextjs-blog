@@ -8,6 +8,7 @@ async function handler(req) {
     try {
         const slug = req.nextUrl.searchParams.get("slug");
         const draft = req.nextUrl.searchParams.get("draft");
+        const isDraft = draft == "true";
         const mode = req.nextUrl.searchParams.get("mode");
         const incrementVal = mode !== "edit" ? 1 : 0;
 
@@ -27,7 +28,7 @@ async function handler(req) {
             return response(404, "Blog not found");
         }
 
-        if (blog.draft && !draft) {
+        if (blog.draft && !isDraft) {
             return response(403, "This blog is in draft mode.");
         }
 

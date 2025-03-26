@@ -13,6 +13,7 @@ const nanoid = customAlphabet("0123456789", 6);
 async function handler(req) {
     try {
         const { title, des, banner, content, tags = [], draft, slug: blogslug } = await req.json();
+        console.log(tags);
         const user_id = req.user;
 
         if (!title || !title.length) {
@@ -38,12 +39,12 @@ async function handler(req) {
         }
 
         const tagsObj = await Tag.find({
-            name: { $in: tags.map((name) => name.trim().toLowerCase()) },
+            name: { $in: tags.map((tag) => tag.name.trim().toLowerCase()) },
         });
         const tagNames = tagsObj.map((tag) => tag.name.trim().toLowerCase());
 
         const newTagNames = tags
-            .map((name) => name.trim().toLowerCase())
+            .map((tag) => tag.name.trim().toLowerCase())
             .filter((name) => !tagNames.includes(name));
 
         const newTags =

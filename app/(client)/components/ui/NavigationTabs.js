@@ -21,6 +21,22 @@ const NavigationTabs = ({ tab, setTab, tabs, defaultHidden = [], showSkeleton = 
         );
     };
 
+    useEffect(() => {
+        const handleResize = () => {
+            const mobile = window.innerWidth < 720;
+
+            if (!mobile && defaultHidden.includes(tab)) {
+                const firstVisibleTab = tabs.find((t) => !defaultHidden.includes(t.id));
+                if (firstVisibleTab) {
+                    setTab(firstVisibleTab.id);
+                }
+            }
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, [tab, defaultHidden, tabs]);
+
     const handleScroll = (direction) => {
         const container = scrollContainerRef.current;
         if (!container) return;

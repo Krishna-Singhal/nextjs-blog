@@ -67,7 +67,6 @@ const Blog = () => {
 
     const {
         title,
-        des,
         banner,
         content,
         author: {

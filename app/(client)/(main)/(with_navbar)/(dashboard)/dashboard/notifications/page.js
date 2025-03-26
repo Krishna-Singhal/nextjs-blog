@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import NoDataMessage from "@components/ui/no-data";
 import { useUser } from "@context/UserContext";
@@ -32,7 +32,7 @@ async function fetchNotifications({ pageParam = 1, queryKey, access_token }) {
 
 const NotificationsPage = () => {
     const { filter, filters, setFilter, notifications, setNotifications } = useNotification();
-    const { user } = useUser();
+    const { user, newNotificationsAvailable, refetchNotification } = useUser();
 
     const {
         data: notificationsData,
@@ -58,6 +58,10 @@ const NotificationsPage = () => {
     useEffect(() => {
         if (notificationsData) {
             setNotifications(notificationsData.pages.flatMap((page) => page.notifications));
+
+            if (newNotificationsAvailable) {
+                refetchNotification();
+            }
         }
     }, [notificationsData]);
 

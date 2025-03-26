@@ -6,7 +6,7 @@ import { useNotification } from "../../context/NotificationContext";
 const ReplyField = ({ _id, notification_id, parentComment, index, setReplying }) => {
     const [comment, setComment] = useState("");
     const { user } = useUser();
-    const { notifications, setNotifications } = useNotification();
+    const { setNotifications } = useNotification();
 
     const handleTitleChange = (e) => {
         let titleInput = e.target;
@@ -37,7 +37,7 @@ const ReplyField = ({ _id, notification_id, parentComment, index, setReplying })
             setNotifications((prevNotifications) =>
                 prevNotifications.map((notification, i) =>
                     i === index
-                        ? { ...notification, reply: { comment, _id: data._id } }
+                        ? { ...notification, reply: { comment, _id: data.comment._id } }
                         : notification
                 )
             );

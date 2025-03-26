@@ -27,7 +27,7 @@ export const UserProvider = ({ children, initialUser }) => {
         return data.available;
     };
 
-    const { data: newNotificationsAvailable } = useQuery({
+    const { data: newNotificationsAvailable, refetch: refetchNotification } = useQuery({
         queryKey: ["notificationsAvailable", user.access_token],
         queryFn: () => fetchNotifications(user.access_token),
         staleTime: 300000,
@@ -43,7 +43,14 @@ export const UserProvider = ({ children, initialUser }) => {
 
     return (
         <UserContext.Provider
-            value={{ user, loading, setUser, refetchUser: fetchUser, newNotificationsAvailable }}
+            value={{
+                user,
+                loading,
+                setUser,
+                refetchUser: fetchUser,
+                newNotificationsAvailable,
+                refetchNotification,
+            }}
         >
             {children}
         </UserContext.Provider>

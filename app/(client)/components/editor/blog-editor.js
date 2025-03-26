@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useEditor } from "@context/EditorContext";
 import { getEditorTools } from "@components/editor/editor-tools";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useUser } from "@context/UserContext";
 
 const BlogEditor = () => {
@@ -21,6 +21,7 @@ const BlogEditor = () => {
         setEditorState,
         handleNoEnter,
     } = useEditor();
+    const { slug } = useParams();
 
     const [EditorJS, setEditorJS] = useState(null);
     const [tools, setTools] = useState(null);
@@ -48,7 +49,7 @@ const BlogEditor = () => {
             setTextEditor(
                 new EditorJS({
                     holder: "textEditor",
-                    data: content,
+                    data: Array.isArray(content) ? content[0] : content,
                     tools,
                     placeholder: "Let's write an awesome story",
                 })
@@ -63,6 +64,12 @@ const BlogEditor = () => {
         //     editor.blocks.insert("image", { file: { url: pastedText } });
         // });
     }, [EditorJS, tools]);
+
+    useEffect(() => {
+        if (banner) {
+            setImgSrc(banner);
+        }
+    }, [banner]);
 
     const handleBannerUpload = (e) => {
         let img = e.target.files[0];
@@ -135,7 +142,15 @@ const BlogEditor = () => {
                             "Content-Type": "application/json",
                             Authorization: `Bearer ${user.access_token}`,
                         },
-                        body: JSON.stringify({ title, banner, des, content, tags, draft: true }),
+                        body: JSON.stringify({
+                            title,
+                            banner,
+                            des,
+                            content,
+                            tags,
+                            draft: true,
+                            slug,
+                        }),
                     });
 
                     const data = await res.json();
@@ -144,7 +159,7 @@ const BlogEditor = () => {
                     if (res.ok) {
                         toast.success("Blog draft saved.");
                         setTimeout(() => {
-                            router.push("/");
+                            router.push("/dashboard/blogs?tab=drafts");
                         }, 500);
                     } else {
                         toast.error(data.message);

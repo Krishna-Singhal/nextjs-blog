@@ -10,15 +10,15 @@ async function deleteComments(commentId) {
     const comment = await Comment.findOneAndDelete({ _id: commentId });
 
     if (!comment) return;
-    await Notification.deleteMany({ comment: commentId });
-
+    await Notification.findOneAndDelete({ comment: commentId });
+    
     if (comment.parentComment) {
+        await Notification.findOneAndUpdate({ reply: commentId }, { $unset: { reply: 1 } });
         await Comment.findOneAndUpdate(
             { _id: comment.parentComment },
             { $inc: { "activity.total_replies": -1 } }
         );
     } else {
-
         const replies = await Comment.find({ parentComment: commentId });
         for (const reply of replies) {
             await deleteComments(reply._id);
@@ -40,7 +40,7 @@ async function handler(req) {
         const user_id = req.user;
         const { _id } = await req.json();
 
-        const comment = await Comment.findOne({ _id });
+        const comment = await Comment.findOne({ _id }).populate("blog", "author");
 
         if (!comment) {
             return response(404, "Comment not found");

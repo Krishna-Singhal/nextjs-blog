@@ -5,7 +5,7 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import NavigationTabs from "@components/ui/NavigationTabs";
 import AnimationWrapper from "@common/page-animation";
 import BlogCard from "@components/home/BlogCard";
-import NoDataMessage from "../ui/no-data";
+import NoDataMessage from "@components/ui/no-data";
 
 const PAGE_SIZE = 10;
 

@@ -3,7 +3,9 @@ import ProfileImage from "@components/ui/ProfileImage";
 import Link from "next/link";
 import { timeAgo } from "@common/functions";
 import ReplyField from "@components/dashboard/ReplyField";
-import { useUser } from "../../context/UserContext";
+import { useUser } from "@context/UserContext";
+import { useNotification } from "@context/NotificationContext";
+import toast from "react-hot-toast";
 
 const NotificationCard = ({ data, index }) => {
     const {
@@ -13,20 +15,50 @@ const NotificationCard = ({ data, index }) => {
         },
         blog: { _id, title, slug },
         type,
-        comment: { comment, parentComment },
+        comment: { _id: comment_id, comment, parentComment },
         reply,
+        seen,
         createdAt,
     } = data;
     const { user } = useUser();
+    const { setNotifications } = useNotification();
 
     const [replying, setReplying] = useState(false);
 
-    const handleReplyClick = () => {
-        setReplying((p) => !p);
+    const handleDelete = async (_id, isReply, target) => {
+        target.disabled = true;
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/activity/comment/delete`, {
+            method: "POST",
+            headers: { Authorization: "Bearer " + user.access_token },
+            body: JSON.stringify({
+                _id,
+            }),
+        });
+        target.disabled = false;
+        if (res.ok) {
+            toast.success(`${isReply ? "Reply" : "Comment"} deleted.`);
+            setNotifications((prevNotifications) => {
+                return prevNotifications
+                    .map((notification, idx) => {
+                        if (!isReply) {
+                            return notification.comment._id !== _id ? notification : null;
+                        } else if (idx === index) {
+                            return {
+                                ...notification,
+                                reply: {},
+                            };
+                        }
+                        return notification;
+                    })
+                    .filter(Boolean);
+            });
+        } else {
+            toast.error(`Failed to delete ${isReply ? "reply" : "comment"}.`);
+        }
     };
 
     return (
-        <div className="p-6 border-b border-grey border-l-black ">
+        <div className={"p-6 border-b border-grey border-l-black " + (!seen ? "border-l-2" : "")}>
             <div className="flex gap-5 mb-3">
                 <div className="w-14 h-14 flex-none">
                     <ProfileImage src={profile_img} alt={fullname} />
@@ -68,13 +100,22 @@ const NotificationCard = ({ data, index }) => {
                     <>
                         {(!reply || Object.keys(reply).length === 0) && (
                             <button
-                                onClick={handleReplyClick}
+                                onClick={() => {
+                                    setReplying((p) => !p);
+                                }}
                                 className="underline hover:text-black text-dark-grey"
                             >
                                 Reply
                             </button>
                         )}
-                        <button className="underline text-red/70 hover:text-red/90">Delete</button>
+                        <button
+                            onClick={(e) => {
+                                handleDelete(comment_id, false, e.target);
+                            }}
+                            className="underline text-red/70 hover:text-red/90"
+                        >
+                            Delete
+                        </button>
                     </>
                 )}
             </div>
@@ -115,6 +156,14 @@ const NotificationCard = ({ data, index }) => {
                         </div>
                     </div>
                     <p className="ml-14 font-gelasio text-xl my-2">{reply.comment}</p>
+                    <button
+                        onClick={(e) => {
+                            handleDelete(reply._id, true, e.target);
+                        }}
+                        className="ml-14 mt-2 underline text-red/70 hover:text-red/90"
+                    >
+                        Delete
+                    </button>
                 </div>
             )}
         </div>
