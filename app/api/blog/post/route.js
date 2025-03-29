@@ -39,12 +39,12 @@ async function handler(req) {
         }
 
         const tagsObj = await Tag.find({
-            name: { $in: tags.map((tag) => tag.name.trim().toLowerCase()) },
+            name: { $in: tags.map((tag) => tag.trim().toLowerCase()) },
         });
         const tagNames = tagsObj.map((tag) => tag.name.trim().toLowerCase());
 
         const newTagNames = tags
-            .map((tag) => tag.name.trim().toLowerCase())
+            .map((tag) => tag.trim().toLowerCase())
             .filter((name) => !tagNames.includes(name));
 
         const newTags =

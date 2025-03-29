@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const EditBlogPage = () => {
-    const { blog, setBlog, editorState } = useEditor();
+    const { textEditor, setTextEditor, setBlog, editorState } = useEditor();
     const { slug } = useParams();
     const router = useRouter();
 
@@ -25,8 +25,14 @@ const EditBlogPage = () => {
                     throw new Error("Empty blog data");
                 }
                 setBlog({ ...data.blog, tags: data.blog.tags.map((tag) => tag.name) });
+
+                if (textEditor?.isReady) {
+                    await textEditor.isReady;
+                    textEditor.render(data.blog.content[0] || {});
+                }
             } catch (error) {
-                router.replace("/404");
+                console.log(error);
+                // router.replace("/404");
             }
         };
         fetchBlog();

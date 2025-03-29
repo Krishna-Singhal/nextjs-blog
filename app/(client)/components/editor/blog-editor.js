@@ -54,6 +54,10 @@ const BlogEditor = () => {
                     placeholder: "Let's write an awesome story",
                 })
             );
+        } else {
+            textEditor.isReady.then(() => {
+                textEditor.render(content[0] || {});
+            });
         }
 
         // document.addEventListener("paste", (event) => {
@@ -63,7 +67,14 @@ const BlogEditor = () => {
         //     console.log("Detected Image URL:", pastedText);
         //     editor.blocks.insert("image", { file: { url: pastedText } });
         // });
-    }, [EditorJS, tools]);
+
+        return () => {
+            if (textEditor.isReady) {
+                textEditor.destroy();
+                setTextEditor({ isReady: false });
+            }
+        };
+    }, [EditorJS, tools, content]);
 
     useEffect(() => {
         if (banner) {

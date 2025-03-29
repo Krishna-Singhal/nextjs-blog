@@ -2,27 +2,33 @@ import Image from "next/image";
 import React from "react";
 
 const Img = ({ url, caption }) => {
-    <div>
-        <Image
-            width={0}
-            height={0}
-            sizes="100vw"
-            className="w-full"
-            src={url}
-            alt={data.caption}
-            loading="lazy"
-        />
-        {caption && (
-            <p className="w-full text-center my-3 md:mb-12 text-base text-dark-grey">{caption}</p>
-        )}
-    </div>;
+    return (
+        <div>
+            <Image
+                width={0}
+                height={0}
+                sizes="100vw"
+                className="w-full"
+                src={url}
+                alt={data.caption}
+                loading="lazy"
+            />
+            {caption && (
+                <p className="w-full text-center my-3 md:mb-12 text-base text-dark-grey">
+                    {caption}
+                </p>
+            )}
+        </div>
+    );
 };
 
 const Quote = ({ quote, caption }) => {
-    <div className="bg-purple/20 p-3 pl-5 border-l-4 border-purple">
-        <p className="text-xl leading-10 md:text-2xl">{quote}</p>
-        {caption?.length && <p className="w-full text-purple text-base">{caption}</p>}
-    </div>;
+    return (
+        <div className="bg-purple/20 p-3 pl-5 border-l-4 border-purple">
+            <p className="text-xl leading-10 md:text-2xl">{quote}</p>
+            {caption?.length && <p className="w-full text-purple text-base">{caption}</p>}
+        </div>
+    );
 };
 
 const List = ({ style, items }) => {
