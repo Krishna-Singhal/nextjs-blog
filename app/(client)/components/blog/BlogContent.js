@@ -10,7 +10,7 @@ const Img = ({ url, caption }) => {
                 sizes="100vw"
                 className="w-full"
                 src={url}
-                alt={data.caption}
+                alt={caption || "Blog Banner"}
                 loading="lazy"
             />
             {caption && (

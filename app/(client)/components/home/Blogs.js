@@ -27,6 +27,7 @@ async function fetchBlogs({ pageParam = 1, queryKey }) {
 
 export default function Blogs({ tabsArray, initialBlogs, defaultTab }) {
     const [tab, setTab] = useState(defaultTab || tabsArray?.length ? tabsArray[0]?.id : "for-you");
+    const initialTabRef = useRef(tab);
 
     const { data: tabs, isLoading: tabsLoading } = useQuery({
         queryKey: ["tabs"],
@@ -45,7 +46,7 @@ export default function Blogs({ tabsArray, initialBlogs, defaultTab }) {
     });
 
     const infiniteQueryInitialData =
-        initialBlogs && initialBlogs.length
+        tab === initialTabRef.current && initialBlogs && initialBlogs.length
             ? {
                   pages: [
                       {
